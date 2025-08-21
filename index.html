@@ -59,7 +59,6 @@
         <section class="scroll-section bg-stone-100"><div class="text-center max-w-2xl"><h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Assalamu'alaikum</h2><p class="text-lg mb-4">Maha suci Allah yang telah menciptakan makhluk-Nya berpasang-pasangan. Ya Allah, perkenankanlah kami merangkai kasih dalam ikatan pernikahan.</p><p class="font-bold text-xl">Rizky & Anisa</p></div></section>
         <section class="scroll-section bg-stone-50"><div class="text-center max-w-4xl"><h2 class="font-heading text-5xl md:text-7xl mb-8 text-amber-800">Mempelai</h2><div class="flex flex-col md:flex-row gap-8 items-center"><div class="w-full md:w-1/2"><img src="https://placehold.co/300x300/e2e8f0/333?text=Rizky" alt="Foto Rizky" class="w-48 h-48 mx-auto rounded-full object-cover shadow-lg mb-4"><h3 class="font-heading text-4xl text-amber-900">Rizky Pratama</h3><p class="mt-2 text-gray-600">Putra dari Bapak John Doe & Ibu Jane Doe</p></div><div class="w-full md:w-1/2"><img src="https://placehold.co/300x300/e2e8f0/333?text=Anisa" alt="Foto Anisa" class="w-48 h-48 mx-auto rounded-full object-cover shadow-lg mb-4"><h3 class="font-heading text-4xl text-amber-900">Anisa Rahmawati</h3><p class="mt-2 text-gray-600">Putri dari Bapak Michael Smith & Ibu Sarah Smith</p></div></div></div></section>
         <section class="scroll-section bg-stone-100"><div class="text-center max-w-2xl"><h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Doa & Harapan</h2><p class="text-lg italic">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir."</p><p class="font-bold mt-4">(QS. Ar-Rum: 21)</p></div></section>
-        <section class="scroll-section bg-stone-50"><div class="text-center max-w-2xl w-full"><h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Kirim Ucapan</h2><form id="wishes-form" class="w-full"><input type="text" id="wishes-name" placeholder="Nama Anda" class="w-full p-3 mb-4 border rounded-md"><textarea id="wishes-text" placeholder="Tulis ucapan & doa..." rows="4" class="w-full p-3 mb-4 border rounded-md"></textarea><button type="submit" class="bg-amber-800 text-white font-bold py-3 px-8 rounded-full hover:bg-amber-900 transition duration-300">Kirim</button></div></section>
     </div>
 
     <!-- Admin Panel -->
@@ -84,7 +83,7 @@
     <audio id="background-music" loop></audio>
     <button id="music-toggle-btn" class="hidden fixed bottom-5 left-5 bg-black bg-opacity-50 text-white rounded-full p-3 shadow-lg z-50"></button>
 
-    <!-- Modal for showing wishes confirmation/alerts -->
+    <!-- Modal for showing alerts -->
     <div id="alert-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-[1000]">
         <div class="bg-white p-6 rounded-lg shadow-xl text-center">
             <p id="alert-message" class="text-gray-800"></p>
@@ -95,7 +94,7 @@
     <!-- Firebase SDKs for Firestore -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, addDoc, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBcHvkLmeQRx1b_z8YPxqXA4MwBCPFtZvE",
@@ -133,11 +132,6 @@
             const copyLinkBtn = document.getElementById('copy-link-btn');
             const whatsappOutput = document.getElementById('whatsapp-output');
             const copyTemplateBtn = document.getElementById('copy-template-btn');
-
-            // Wishes form elements
-            const wishesForm = document.getElementById('wishes-form');
-            const wishesNameInput = document.getElementById('wishes-name');
-            const wishesTextInput = document.getElementById('wishes-text');
 
             // Modal elements
             const alertModal = document.getElementById('alert-modal');
@@ -235,7 +229,7 @@
                 coverPage.classList.remove('hidden');
                 adminPanel.classList.add('hidden');
                 adminToggleButton.classList.add('hidden');
-
+                
                 // Load invitation settings from Firestore
                 const invitationDocRef = doc(db, 'invitations', uniqueCodeParam);
                 getDoc(invitationDocRef).then((docSnap) => {
@@ -344,36 +338,6 @@
             musicSelect.addEventListener('change', () => {
                 previewAudio.src = musicSelect.value;
                 previewAudio.play();
-            });
-
-            // Wishes form submission
-            wishesForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const wishesName = wishesNameInput.value.trim();
-                const wishesText = wishesTextInput.value.trim();
-                if (!wishesName || !wishesText) {
-                    showCustomAlert('Nama dan ucapan harus diisi.');
-                    return;
-                }
-                const uniqueCodeParam = urlParams.get('id');
-                
-                try {
-                    if (!uniqueCodeParam) {
-                        showCustomAlert('Tidak dapat mengirim ucapan. Undangan tidak ditemukan.');
-                        return;
-                    }
-                    await addDoc(collection(db, 'wishes'), {
-                        invitationId: uniqueCodeParam,
-                        name: wishesName,
-                        wish: wishesText,
-                        timestamp: new Date()
-                    });
-                    showCustomAlert('Terima kasih! Ucapan Anda telah terkirim.');
-                    wishesForm.reset();
-                } catch (error) {
-                    showCustomAlert('Gagal mengirim ucapan: ' + error.message);
-                    console.error('Error sending wish:', error);
-                }
             });
         });
     </script>
