@@ -79,12 +79,6 @@
                 <div><label class="block text-xs font-medium text-gray-600">Templat Pesan WhatsApp:</label><textarea id="whatsapp-output" rows="8" class="w-full text-xs p-2 border rounded-md bg-gray-100" readonly></textarea><button id="copy-template-btn" class="w-full mt-1 bg-green-600 text-white py-1.5 rounded-md text-xs">Salin Pesan Undangan</button></div>
             </div>
         </div>
-        <div id="wishes-display" class="mt-6 border-t pt-4">
-            <h4 class="font-bold text-md mb-2">Daftar Ucapan Tamu</h4>
-            <ul id="wishes-list" class="space-y-2">
-                <!-- Wishes will be loaded here -->
-            </ul>
-        </div>
     </div>
     
     <audio id="background-music" loop></audio>
@@ -144,9 +138,6 @@
             const wishesForm = document.getElementById('wishes-form');
             const wishesNameInput = document.getElementById('wishes-name');
             const wishesTextInput = document.getElementById('wishes-text');
-
-            // Wishes display list
-            const wishesList = document.getElementById('wishes-list');
 
             // Modal elements
             const alertModal = document.getElementById('alert-modal');
@@ -261,27 +252,6 @@
                     showCustomAlert('Gagal mengambil data undangan: ' + error.message);
                     console.error('Error fetching invitation:', error);
                 });
-
-                // Real-time listener for wishes from Firestore
-                const wishesQuery = query(collection(db, 'wishes'), where('invitationId', '==', uniqueCodeParam));
-                onSnapshot(wishesQuery, (querySnapshot) => {
-                    wishesList.innerHTML = '';
-                    if (!querySnapshot.empty) {
-                        querySnapshot.forEach((doc) => {
-                            const wish = doc.data();
-                            const li = document.createElement('li');
-                            li.className = 'border-b last:border-b-0 py-2';
-                            li.innerHTML = `<span class="font-bold">${wish.name}:</span> ${wish.wish}`;
-                            wishesList.appendChild(li);
-                        });
-                    } else {
-                        wishesList.innerHTML = '<li>Belum ada ucapan.</li>';
-                    }
-                }, (error) => {
-                    console.error('Error listening to wishes:', error);
-                    // Handle real-time errors if needed
-                });
-
             } else {
                 coverPage.classList.remove('hidden');
                 mainContent.classList.add('hidden');
