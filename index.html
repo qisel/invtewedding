@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Pernikahan - Rizky & Anisa</title>
+    <title>Undangan Pernikahan Online</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,7 +59,7 @@
         <section class="scroll-section bg-stone-100"><div class="text-center max-w-2xl"><h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Assalamu'alaikum</h2><p class="text-lg mb-4">Maha suci Allah yang telah menciptakan makhluk-Nya berpasang-pasangan. Ya Allah, perkenankanlah kami merangkai kasih dalam ikatan pernikahan.</p><p class="font-bold text-xl">Rizky & Anisa</p></div></section>
         <section class="scroll-section bg-stone-50"><div class="text-center max-w-4xl"><h2 class="font-heading text-5xl md:text-7xl mb-8 text-amber-800">Mempelai</h2><div class="flex flex-col md:flex-row gap-8 items-center"><div class="w-full md:w-1/2"><img src="https://placehold.co/300x300/e2e8f0/333?text=Rizky" alt="Foto Rizky" class="w-48 h-48 mx-auto rounded-full object-cover shadow-lg mb-4"><h3 class="font-heading text-4xl text-amber-900">Rizky Pratama</h3><p class="mt-2 text-gray-600">Putra dari Bapak John Doe & Ibu Jane Doe</p></div><div class="w-full md:w-1/2"><img src="https://placehold.co/300x300/e2e8f0/333?text=Anisa" alt="Foto Anisa" class="w-48 h-48 mx-auto rounded-full object-cover shadow-lg mb-4"><h3 class="font-heading text-4xl text-amber-900">Anisa Rahmawati</h3><p class="mt-2 text-gray-600">Putri dari Bapak Michael Smith & Ibu Sarah Smith</p></div></div></div></section>
         <section class="scroll-section bg-stone-100"><div class="text-center max-w-2xl"><h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Doa & Harapan</h2><p class="text-lg italic">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir."</p><p class="font-bold mt-4">(QS. Ar-Rum: 21)</p></div></section>
-        <section class="scroll-section bg-stone-50"><div class="text-center max-w-2xl w-full"><h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Kirim Ucapan</h2><form id="wishes-form" class="w-full"><input type="text" placeholder="Nama Anda" class="w-full p-3 mb-4 border rounded-md"><textarea placeholder="Tulis ucapan & doa..." rows="4" class="w-full p-3 mb-4 border rounded-md"></textarea><button type="submit" class="bg-amber-800 text-white font-bold py-3 px-8 rounded-full hover:bg-amber-900 transition duration-300">Kirim</button></form></div></section>
+        <section class="scroll-section bg-stone-50"><div class="text-center max-w-2xl w-full"><h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Kirim Ucapan</h2><form id="wishes-form" class="w-full"><input type="text" id="wishes-name" placeholder="Nama Anda" class="w-full p-3 mb-4 border rounded-md"><textarea id="wishes-text" placeholder="Tulis ucapan & doa..." rows="4" class="w-full p-3 mb-4 border rounded-md"></textarea><button type="submit" class="bg-amber-800 text-white font-bold py-3 px-8 rounded-full hover:bg-amber-900 transition duration-300">Kirim</button></div></section>
     </div>
 
     <!-- Admin Panel -->
@@ -79,12 +79,44 @@
                 <div><label class="block text-xs font-medium text-gray-600">Templat Pesan WhatsApp:</label><textarea id="whatsapp-output" rows="8" class="w-full text-xs p-2 border rounded-md bg-gray-100" readonly></textarea><button id="copy-template-btn" class="w-full mt-1 bg-green-600 text-white py-1.5 rounded-md text-xs">Salin Pesan Undangan</button></div>
             </div>
         </div>
+        <div id="wishes-display" class="mt-6 border-t pt-4">
+            <h4 class="font-bold text-md mb-2">Daftar Ucapan Tamu</h4>
+            <ul id="wishes-list" class="space-y-2">
+                <!-- Wishes will be loaded here -->
+            </ul>
+        </div>
     </div>
     
     <audio id="background-music" loop></audio>
     <button id="music-toggle-btn" class="hidden fixed bottom-5 left-5 bg-black bg-opacity-50 text-white rounded-full p-3 shadow-lg z-50"></button>
 
+    <!-- Modal for showing wishes confirmation/alerts -->
+    <div id="alert-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-[1000]">
+        <div class="bg-white p-6 rounded-lg shadow-xl text-center">
+            <p id="alert-message" class="text-gray-800"></p>
+            <button id="alert-close-btn" class="mt-4 bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700">OK</button>
+        </div>
+    </div>
+
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBcHvkLmeQRx1b_z8YPxqXA4MwBCPFtZvE",
+            authDomain: "undangan-digital-saya-b970e.firebaseapp.com",
+            databaseURL: "https://undangan-digital-saya-b970e-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "undangan-digital-saya-b970e",
+            storageBucket: "undangan-digital-saya-b970e.firebasestorage.app",
+            messagingSenderId: "776870269876",
+            appId: "1:776870269876:web:760c755c643ab95bbe58e1",
+            measurementId: "G-N8X69CZHBS"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const invitationsRef = database.ref('invitations');
+        const wishesRef = database.ref('wishes');
+
         document.addEventListener('DOMContentLoaded', () => {
             const coverPage = document.getElementById('cover-page');
             const mainContent = document.getElementById('main-content');
@@ -94,9 +126,7 @@
             const adminPanel = document.getElementById('admin-panel');
             const adminToggleButton = document.getElementById('admin-toggle-btn');
             const effectContainer = document.getElementById('effect-container');
-            const wishesForm = document.getElementById('wishes-form');
-            const guestNameDisplay = document.getElementById('guest-name');
-
+            
             // Admin Panel Elements
             const fontSelect = document.getElementById('font-select');
             const fontColorInput = document.getElementById('font-color');
@@ -111,21 +141,37 @@
             const whatsappOutput = document.getElementById('whatsapp-output');
             const copyTemplateBtn = document.getElementById('copy-template-btn');
 
+            // Wishes form elements
+            const wishesForm = document.getElementById('wishes-form');
+            const wishesNameInput = document.getElementById('wishes-name');
+            const wishesTextInput = document.getElementById('wishes-text');
+
+            // Wishes display list
+            const wishesList = document.getElementById('wishes-list');
+
+            // Modal elements
+            const alertModal = document.getElementById('alert-modal');
+            const alertMessage = document.getElementById('alert-message');
+            const alertCloseBtn = document.getElementById('alert-close-btn');
+
             let isMusicPlaying = false;
             const previewAudio = new Audio();
-            let currentSettings = {
-                font: "'Great Vibes', cursive",
-                color: '#FFFFFF',
-                music: 'https://files.catbox.moe/q9vol9.mp3',
-                effect: 'none'
-            };
-
+            
             const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
             const pauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
             const previewPlayIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
             const previewPauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
             
             previewMusicBtn.innerHTML = previewPlayIcon;
+            
+            function showCustomAlert(message) {
+                alertMessage.textContent = message;
+                alertModal.classList.remove('hidden');
+            }
+
+            alertCloseBtn.addEventListener('click', () => {
+                alertModal.classList.add('hidden');
+            });
 
             function createParticle(type) {
                 const particle = document.createElement('div');
@@ -168,41 +214,78 @@
             }
 
             function toggleMusic() {
-                if (isMusicPlaying) { backgroundMusic.pause(); musicToggleButton.innerHTML = playIcon; } 
-                else { backgroundMusic.play().catch(e => console.error("Audio play failed:", e)); musicToggleButton.innerHTML = pauseIcon; }
+                if (isMusicPlaying) { 
+                    backgroundMusic.pause(); 
+                    musicToggleButton.innerHTML = playIcon; 
+                } else { 
+                    backgroundMusic.play().catch(e => console.error("Audio play failed:", e)); 
+                    musicToggleButton.innerHTML = pauseIcon; 
+                }
                 isMusicPlaying = !isMusicPlaying;
             }
 
             function copyToClipboard(text, button) {
-                navigator.clipboard.writeText(text).then(() => {
-                    const originalText = button.textContent;
-                    button.textContent = 'Tersalin!';
-                    setTimeout(() => { button.textContent = originalText; }, 2000);
-                }).catch(err => console.error('Gagal menyalin:', err));
+                const tempInput = document.createElement('textarea');
+                tempInput.value = text;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                const originalText = button.textContent;
+                button.textContent = 'Tersalin!';
+                setTimeout(() => { button.textContent = originalText; }, 2000);
             }
 
             const urlParams = new URLSearchParams(window.location.search);
-            const guestNameParam = urlParams.get('to');
-            const settingsParam = urlParams.get('settings');
+            const guestNameDisplay = document.getElementById('guest-name');
+            const uniqueCodeParam = urlParams.get('id');
 
-            if (guestNameParam) {
-                guestNameDisplay.textContent = decodeURIComponent(guestNameParam);
+            if (uniqueCodeParam) {
+                mainContent.classList.remove('hidden');
+                coverPage.classList.remove('hidden');
+                adminPanel.classList.add('hidden');
                 adminToggleButton.classList.add('hidden');
-            }
-            
-            if (settingsParam) {
-                try {
-                    currentSettings = JSON.parse(atob(settingsParam));
-                } catch (e) {
-                    console.error("Gagal memuat pengaturan tamu, menggunakan default.", e);
-                }
-            } else {
-                adminToggleButton.classList.remove('hidden');
-            }
-            
-            applySettings(currentSettings);
-            musicToggleButton.innerHTML = playIcon;
 
+                // Load invitation settings from Firebase
+                const invitationRef = invitationsRef.child(uniqueCodeParam);
+                invitationRef.once('value', (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        guestNameDisplay.textContent = data.to;
+                        applySettings(data.settings);
+                        musicToggleButton.classList.remove('hidden');
+                    } else {
+                        guestNameDisplay.textContent = 'Tamu Undangan';
+                        showCustomAlert('Undangan tidak ditemukan atau tautan rusak.');
+                    }
+                });
+
+                // Load wishes from Firebase for this specific invitation
+                wishesRef.orderByChild('invitationId').equalTo(uniqueCodeParam).on('value', (snapshot) => {
+                    const wishesData = snapshot.val();
+                    wishesList.innerHTML = ''; // Clear the list
+                    if (wishesData) {
+                        const wishesArray = Object.values(wishesData);
+                        wishesArray.forEach(wish => {
+                            const li = document.createElement('li');
+                            li.className = 'border-b last:border-b-0 py-2';
+                            li.innerHTML = `<span class="font-bold">${wish.name}:</span> ${wish.wish}`;
+                            wishesList.appendChild(li);
+                        });
+                    } else {
+                        wishesList.innerHTML = '<li>Belum ada ucapan.</li>';
+                    }
+                });
+
+            } else {
+                coverPage.classList.remove('hidden');
+                mainContent.classList.add('hidden');
+                adminToggleButton.classList.remove('hidden');
+                adminPanel.classList.remove('hidden');
+                musicToggleButton.classList.add('hidden');
+            }
+            
+            // Event Listeners
             openInvitationBtn.addEventListener('click', () => {
                 adminPanel.classList.add('hidden');
                 previewAudio.pause();
@@ -211,7 +294,6 @@
                 setTimeout(() => {
                     coverPage.style.display = 'none';
                     mainContent.classList.remove('hidden');
-                    musicToggleButton.classList.remove('hidden');
                     toggleMusic();
                 }, 1000);
             });
@@ -230,13 +312,16 @@
                 applyEffect(effectSelect.value);
             });
 
+            // Generate Link Button functionality
             generateLinkBtn.addEventListener('click', () => {
                 const guestName = guestNameInput.value.trim();
                 if (!guestName) {
-                    alert('Silakan masukkan nama tamu terlebih dahulu.');
+                    showCustomAlert('Silakan masukkan nama tamu terlebih dahulu.');
                     return;
                 }
 
+                // Generate a short, random unique code
+                const uniqueCode = Math.random().toString(36).substring(2, 8);
                 const currentSelections = {
                     font: fontSelect.value,
                     color: fontColorInput.value,
@@ -244,16 +329,22 @@
                     effect: effectSelect.value
                 };
 
-                const settingsString = btoa(JSON.stringify(currentSelections));
-                const baseUrl = window.location.href.split('?')[0];
-                const guestUrl = `${baseUrl}?to=${encodeURIComponent(guestName)}&settings=${settingsString}`;
-                
-                guestLinkOutput.value = guestUrl;
-
-                const template = `Assalamualaikum Warahmatullahi Wabarakatuh\n\nTanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i:\n\n*${guestName}*\n\nUntuk hadir di acara pernikahan kami. Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Anda berkenan hadir untuk memberikan doa restu.\n\nUntuk detail acara, silakan buka tautan di bawah ini:\n${guestUrl}\n\nTerima kasih.\n\nWassalamualaikum Warahmatullahi Wabarakatuh\n\n- Rizky & Anisa`;
-                whatsappOutput.value = template;
-                
-                outputArea.classList.remove('hidden');
+                // Save data to Firebase
+                invitationsRef.child(uniqueCode).set({
+                    to: guestName,
+                    settings: currentSelections
+                }).then(() => {
+                    const baseUrl = window.location.href.split('?')[0];
+                    const guestUrl = `${baseUrl}?id=${uniqueCode}`;
+                    
+                    guestLinkOutput.value = guestUrl;
+                    const template = `Assalamualaikum Warahmatullahi Wabarakatuh\n\nTanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i:\n\n*${guestName}*\n\nUntuk hadir di acara pernikahan kami. Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Anda berkenan hadir untuk memberikan doa restu.\n\nUntuk detail acara, silakan buka tautan di bawah ini:\n${guestUrl}\n\nTerima kasih.\n\nWassalamualaikum Warahmatullahi Wabarakatuh\n\n- Rizky & Anisa`;
+                    whatsappOutput.value = template;
+                    
+                    outputArea.classList.remove('hidden');
+                }).catch(error => {
+                    showCustomAlert('Gagal menyimpan data ke Firebase: ' + error.message);
+                });
             });
 
             copyLinkBtn.addEventListener('click', () => copyToClipboard(guestLinkOutput.value, copyLinkBtn));
@@ -277,10 +368,28 @@
                 previewAudio.play();
             });
 
+            // Wishes form submission
             wishesForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                alert('Terima kasih! Ucapan Anda telah terkirim.');
-                wishesForm.reset();
+                const wishesName = wishesNameInput.value.trim();
+                const wishesText = wishesTextInput.value.trim();
+                if (!wishesName || !wishesText) {
+                    showCustomAlert('Nama dan ucapan harus diisi.');
+                    return;
+                }
+                const uniqueCodeParam = urlParams.get('id');
+
+                wishesRef.push({
+                    invitationId: uniqueCodeParam,
+                    name: wishesName,
+                    wish: wishesText,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                }).then(() => {
+                    showCustomAlert('Terima kasih! Ucapan Anda telah terkirim.');
+                    wishesForm.reset();
+                }).catch(error => {
+                    showCustomAlert('Gagal mengirim ucapan: ' + error.message);
+                });
             });
         });
     </script>
