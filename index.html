@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Pernikahan - Rizky & Anisa</title>
+    <title>Undangan Pernikahan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,6 @@
         }
         body { font-family: var(--main-font); color: var(--font-color); overscroll-behavior: contain; }
         .font-heading { font-family: var(--heading-font); }
-        /* FIX: Changed #cover to #cover-page to match the element ID */
         #cover-page h1, #cover-page p { color: var(--cover-font-color); }
         .scroll-container { scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
         .scroll-section { scroll-snap-align: start; height: 100vh; width: 100%; flex-shrink: 0; display: flex; justify-content: center; align-items: center; padding: 1.5rem; }
@@ -67,9 +66,9 @@
         <h3 class="font-bold text-lg mb-4">Panel Admin Undangan</h3>
         <div class="space-y-4">
             <div><label class="block text-sm font-medium text-gray-700 mb-1">Nama Tamu</label><input type="text" id="guest-name-input" class="w-full p-2 border rounded-md" placeholder="Contoh: John Doe"></div>
-            <div><label class="block text-sm font-medium text-gray-700 mb-1">Jenis Huruf Judul</label><select id="font-select" class="w-full p-2 border rounded-md"><option value="'Great Vibes', cursive" style="font-family: 'Great Vibes', cursive; font-size: 1.2rem;">Great Vibes</option><option value="'Dancing Script', cursive" style="font-family: 'Dancing Script', cursive; font-size: 1.2rem;">Dancing Script</option><option value="'Playfair Display', serif" style="font-family: 'Playfair Display', serif;">Playfair Display</option><option value="'Pacifico', cursive" style="font-family: 'Pacifico', cursive; font-size: 1.1rem;">Pacifico</option><option value="'Caveat', cursive" style="font-family: 'Caveat', cursive; font-size: 1.3rem;">Caveat</option><option value="'Lobster', cursive" style="font-family: 'Lobster', cursive; font-size: 1.1rem;">Lobster</option><option value="'Sacramento', cursive" style="font-family: 'Sacramento', cursive; font-size: 1.5rem;">Sacramento</option><option value="'Merriweather', serif" style="font-family: 'Merriweather', serif;">Merriweather</option><option value="'Lato', sans-serif" style="font-family: 'Lato', sans-serif;">Lato</option><option value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto</option></select></div>
+            <div><label class="block text-sm font-medium text-gray-700 mb-1">Jenis Huruf Judul</label><select id="font-select" class="w-full p-2 border rounded-md"><option value="'Great Vibes', cursive" style="font-family: 'Great Vibes', cursive; font-size: 1.2rem;">Great Vibes</option><option value="'Dancing Script', cursive" style="font-family: 'Dancing Script', cursive; font-size: 1.2rem;">Dancing Script</option><option value="'Pacifico', cursive" style="font-family: 'Pacifico', cursive; font-size: 1.1rem;">Pacifico</option></select></div>
             <div><label class="block text-sm font-medium text-gray-700 mb-1">Warna Teks Sampul</label><input type="color" id="font-color" value="#FFFFFF" class="w-full h-10 border rounded-md"></div>
-            <div><label class="block text-sm font-medium text-gray-700 mb-1">Musik Latar</label><div class="flex items-center gap-2"><select id="music-select" class="w-full p-2 border rounded-md"><option value="https://files.catbox.moe/q9vol9.mp3">Music 1</option><option value="https://files.catbox.moe/dqrd8a.mp3">Music 2</option><option value="https://files.catbox.moe/q4p716.mp3">Music 3</option></select><button id="preview-music-btn" class="p-2 border rounded-md bg-gray-100 hover:bg-gray-200"></button></div></div>
+            <div><label class="block text-sm font-medium text-gray-700 mb-1">Musik Latar</label><select id="music-select" class="w-full p-2 border rounded-md"><option value="https://files.catbox.moe/q9vol9.mp3">Music 1</option><option value="https://files.catbox.moe/dqrd8a.mp3">Music 2</option><option value="https://files.catbox.moe/q4p716.mp3">Music 3</option></select></div>
             <div><label class="block text-sm font-medium text-gray-700 mb-1">Efek Latar</label><select id="effect-select" class="w-full p-2 border rounded-md"><option value="none">Tidak Ada</option><option value="petals">Kelopak Bunga</option><option value="snow">Salju</option><option value="confetti">Konfeti</option><option value="hearts">Hati Jatuh</option><option value="bubbles">Gelembung</option><option value="stars">Bintang Berkelip</option></select></div>
         </div>
         <div class="mt-6">
@@ -84,169 +83,171 @@
     <audio id="background-music" loop></audio>
     <button id="music-toggle-btn" class="hidden fixed bottom-5 left-5 bg-black bg-opacity-50 text-white rounded-full p-3 shadow-lg z-50"></button>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const coverPage = document.getElementById('cover-page');
-            const mainContent = document.getElementById('main-content');
-            const openInvitationBtn = document.getElementById('open-invitation-btn');
-            const backgroundMusic = document.getElementById('background-music');
-            const musicToggleButton = document.getElementById('music-toggle-btn');
-            const adminPanel = document.getElementById('admin-panel');
-            const adminToggleButton = document.getElementById('admin-toggle-btn');
-            const effectContainer = document.getElementById('effect-container');
-            const wishesForm = document.getElementById('wishes-form');
-            const guestNameDisplay = document.getElementById('guest-name');
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-            // Admin Panel Elements
-            const fontSelect = document.getElementById('font-select');
-            const fontColorInput = document.getElementById('font-color');
-            const musicSelect = document.getElementById('music-select');
-            const previewMusicBtn = document.getElementById('preview-music-btn');
-            const effectSelect = document.getElementById('effect-select');
-            const guestNameInput = document.getElementById('guest-name-input');
-            const generateLinkBtn = document.getElementById('generate-link-btn');
-            const outputArea = document.getElementById('output-area');
-            const guestLinkOutput = document.getElementById('guest-link-output');
-            const copyLinkBtn = document.getElementById('copy-link-btn');
-            const whatsappOutput = document.getElementById('whatsapp-output');
-            const copyTemplateBtn = document.getElementById('copy-template-btn');
+        const userFirebaseConfig = {
+          apiKey: "AIzaSyBcHvkLmeQRx1b_z8YPxqXA4MwBCPFtZvE",
+          authDomain: "undangan-digital-saya-b970e.firebaseapp.com",
+          projectId: "undangan-digital-saya-b970e",
+          storageBucket: "undangan-digital-saya-b970e.appspot.com",
+          messagingSenderId: "776870269876",
+          appId: "1:776870269876:web:760c755c643ab95bbe58e1"
+        };
+        const firebaseConfig = typeof __firebase_config !== 'undefined' && __firebase_config.trim() !== '{}' ? JSON.parse(__firebase_config) : userFirebaseConfig;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : firebaseConfig.projectId;
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-            let isMusicPlaying = false;
-            const previewAudio = new Audio();
-            let currentSettings = {
-                font: "'Great Vibes', cursive",
-                color: '#FFFFFF',
-                music: 'https://files.catbox.moe/q9vol9.mp3',
-                effect: 'none'
-            };
+        const coverPage = document.getElementById('cover-page');
+        const mainContent = document.getElementById('main-content');
+        const openInvitationBtn = document.getElementById('open-invitation-btn');
+        const backgroundMusic = document.getElementById('background-music');
+        const musicToggleButton = document.getElementById('music-toggle-btn');
+        const adminPanel = document.getElementById('admin-panel');
+        const adminToggleButton = document.getElementById('admin-toggle-btn');
+        const effectContainer = document.getElementById('effect-container');
+        const wishesForm = document.getElementById('wishes-form');
+        const guestNameDisplay = document.getElementById('guest-name');
+        const fontSelect = document.getElementById('font-select');
+        const fontColorInput = document.getElementById('font-color');
+        const musicSelect = document.getElementById('music-select');
+        const effectSelect = document.getElementById('effect-select');
+        const guestNameInput = document.getElementById('guest-name-input');
+        const generateLinkBtn = document.getElementById('generate-link-btn');
+        const outputArea = document.getElementById('output-area');
+        const guestLinkOutput = document.getElementById('guest-link-output');
+        const copyLinkBtn = document.getElementById('copy-link-btn');
+        const whatsappOutput = document.getElementById('whatsapp-output');
+        const copyTemplateBtn = document.getElementById('copy-template-btn');
 
-            const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
-            const pauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
-            const previewPlayIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
-            const previewPauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
-            
-            previewMusicBtn.innerHTML = previewPlayIcon;
+        let isMusicPlaying = false;
+        const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+        const pauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
 
-            function createParticle(type) {
-                const particle = document.createElement('div');
-                particle.style.left = `${Math.random() * 100}vw`;
-                particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
-                particle.style.animationDelay = `${Math.random() * 5}s`;
-                if (type === 'petals') particle.className = 'petal';
-                else if (type === 'snow') particle.className = 'snow';
-                else if (type === 'confetti') {
-                    const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800'];
-                    particle.className = 'confetti';
-                    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                } else if (type === 'hearts') particle.className = 'heart';
-                else if (type === 'bubbles') particle.className = 'bubble';
-                else if (type === 'stars') {
-                    particle.className = 'star';
-                    particle.style.top = `${Math.random() * 100}vh`;
-                }
-                effectContainer.appendChild(particle);
+        function createParticle(type) {
+            const particle = document.createElement('div');
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            if (type === 'petals') particle.className = 'petal';
+            else if (type === 'snow') particle.className = 'snow';
+            else if (type === 'confetti') {
+                const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800'];
+                particle.className = 'confetti';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            } else if (type === 'hearts') particle.className = 'heart';
+            else if (type === 'bubbles') particle.className = 'bubble';
+            else if (type === 'stars') {
+                particle.className = 'star';
+                particle.style.top = `${Math.random() * 100}vh`;
             }
+            effectContainer.appendChild(particle);
+        }
 
-            function applyEffect(effectType) {
-                effectContainer.innerHTML = '';
-                if (effectType !== 'none') {
-                    effectContainer.classList.remove('hidden');
-                    for (let i = 0; i < 30; i++) createParticle(effectType);
-                } else {
-                    effectContainer.classList.add('hidden');
-                }
+        function applyEffect(effectType) {
+            effectContainer.innerHTML = '';
+            if (effectType !== 'none') {
+                effectContainer.classList.remove('hidden');
+                for (let i = 0; i < 30; i++) createParticle(effectType);
+            } else {
+                effectContainer.classList.add('hidden');
             }
+        }
 
-            function applySettings(settings) {
-                document.documentElement.style.setProperty('--heading-font', settings.font);
-                document.documentElement.style.setProperty('--cover-font-color', settings.color);
-                if (backgroundMusic.src !== settings.music) {
-                    backgroundMusic.src = settings.music;
-                    backgroundMusic.load();
-                }
-                applyEffect(settings.effect);
+        function applySettings(settings) {
+            document.documentElement.style.setProperty('--heading-font', settings.font);
+            document.documentElement.style.setProperty('--cover-font-color', settings.color);
+            if (backgroundMusic.src !== settings.music) {
+                backgroundMusic.src = settings.music;
+                backgroundMusic.load();
             }
+            applyEffect(settings.effect);
+        }
 
-            function toggleMusic() {
-                if (isMusicPlaying) { backgroundMusic.pause(); musicToggleButton.innerHTML = playIcon; } 
-                else { backgroundMusic.play().catch(e => console.error("Audio play failed:", e)); musicToggleButton.innerHTML = pauseIcon; }
-                isMusicPlaying = !isMusicPlaying;
-            }
+        function toggleMusic() {
+            if (isMusicPlaying) { backgroundMusic.pause(); musicToggleButton.innerHTML = playIcon; } 
+            else { backgroundMusic.play().catch(e => console.error("Audio play failed:", e)); musicToggleButton.innerHTML = pauseIcon; }
+            isMusicPlaying = !isMusicPlaying;
+        }
 
-            function copyToClipboard(text, button) {
-                navigator.clipboard.writeText(text).then(() => {
-                    const originalText = button.textContent;
-                    button.textContent = 'Tersalin!';
-                    setTimeout(() => { button.textContent = originalText; }, 2000);
-                }).catch(err => console.error('Gagal menyalin:', err));
-            }
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Tersalin!';
+                setTimeout(() => { button.textContent = originalText; }, 2000);
+            }).catch(err => console.error('Gagal menyalin:', err));
+        }
 
+        async function initializePage() {
+            await signInAnonymously(auth);
             const urlParams = new URLSearchParams(window.location.search);
-            const guestNameParam = urlParams.get('to');
-            const settingsParam = urlParams.get('settings');
+            const guestId = urlParams.get('guestId');
 
-            if (guestNameParam) {
-                guestNameDisplay.textContent = decodeURIComponent(guestNameParam);
+            if (guestId) {
                 adminToggleButton.classList.add('hidden');
-            }
-            
-            if (settingsParam) {
+                const guestDocRef = doc(db, `invitations/${appId}/guests`, guestId);
                 try {
-                    currentSettings = JSON.parse(atob(settingsParam));
-                } catch (e) {
-                    console.error("Gagal memuat pengaturan tamu, menggunakan default.", e);
+                    const docSnap = await getDoc(guestDocRef);
+                    if (docSnap.exists()) {
+                        const guestData = docSnap.data();
+                        guestNameDisplay.textContent = guestData.name;
+                        applySettings(guestData.settings);
+                    } else {
+                        console.log("Tamu tidak ditemukan!");
+                    }
+                } catch (error) {
+                    console.error("Gagal mengambil data tamu:", error);
                 }
             } else {
                 adminToggleButton.classList.remove('hidden');
+                applySettings({ font: "'Great Vibes', cursive", color: '#FFFFFF', music: 'https://files.catbox.moe/q9vol9.mp3', effect: 'none' });
             }
-            
-            applySettings(currentSettings);
             musicToggleButton.innerHTML = playIcon;
+        }
 
-            openInvitationBtn.addEventListener('click', () => {
-                adminPanel.classList.add('hidden');
-                previewAudio.pause();
-                coverPage.style.transition = 'opacity 1s ease-out';
-                coverPage.style.opacity = '0';
-                setTimeout(() => {
-                    coverPage.style.display = 'none';
-                    mainContent.classList.remove('hidden');
-                    musicToggleButton.classList.remove('hidden');
-                    toggleMusic();
-                }, 1000);
-            });
+        openInvitationBtn.addEventListener('click', () => {
+            adminPanel.classList.add('hidden');
+            coverPage.style.transition = 'opacity 1s ease-out';
+            coverPage.style.opacity = '0';
+            setTimeout(() => {
+                coverPage.style.display = 'none';
+                mainContent.classList.remove('hidden');
+                musicToggleButton.classList.remove('hidden');
+                toggleMusic();
+            }, 1000);
+        });
 
-            musicToggleButton.addEventListener('click', toggleMusic);
-            adminToggleButton.addEventListener('click', () => adminPanel.classList.toggle('hidden'));
+        musicToggleButton.addEventListener('click', toggleMusic);
+        adminToggleButton.addEventListener('click', () => adminPanel.classList.toggle('hidden'));
 
-            // Event Listeners for live preview in Admin Panel
-            fontSelect.addEventListener('change', () => {
-                document.documentElement.style.setProperty('--heading-font', fontSelect.value);
-            });
-            fontColorInput.addEventListener('input', () => {
-                document.documentElement.style.setProperty('--cover-font-color', fontColorInput.value);
-            });
-            effectSelect.addEventListener('change', () => {
-                applyEffect(effectSelect.value);
-            });
+        generateLinkBtn.addEventListener('click', async () => {
+            const guestName = guestNameInput.value.trim();
+            if (!guestName) {
+                alert('Silakan masukkan nama tamu terlebih dahulu.');
+                return;
+            }
 
-            generateLinkBtn.addEventListener('click', () => {
-                const guestName = guestNameInput.value.trim();
-                if (!guestName) {
-                    alert('Silakan masukkan nama tamu terlebih dahulu.');
-                    return;
-                }
+            const settings = {
+                font: fontSelect.value,
+                color: fontColorInput.value,
+                music: musicSelect.value,
+                effect: effectSelect.value
+            };
 
-                const currentSelections = {
-                    font: fontSelect.value,
-                    color: fontColorInput.value,
-                    music: musicSelect.value,
-                    effect: effectSelect.value
-                };
-
-                const settingsString = btoa(JSON.stringify(currentSelections));
+            try {
+                const guestsCollectionRef = collection(db, `invitations/${appId}/guests`);
+                const newGuestDocRef = await addDoc(guestsCollectionRef, {
+                    name: guestName,
+                    settings: settings
+                });
+                
                 const baseUrl = window.location.href.split('?')[0];
-                const guestUrl = `${baseUrl}?to=${encodeURIComponent(guestName)}&settings=${settingsString}`;
+                const guestUrl = `${baseUrl}?guestId=${newGuestDocRef.id}`;
                 
                 guestLinkOutput.value = guestUrl;
 
@@ -254,35 +255,23 @@
                 whatsappOutput.value = template;
                 
                 outputArea.classList.remove('hidden');
-            });
 
-            copyLinkBtn.addEventListener('click', () => copyToClipboard(guestLinkOutput.value, copyLinkBtn));
-            copyTemplateBtn.addEventListener('click', () => copyToClipboard(whatsappOutput.value, copyTemplateBtn));
-
-            previewMusicBtn.addEventListener('click', () => {
-                if (previewAudio.paused) {
-                    if (!previewAudio.src || previewAudio.src !== musicSelect.value) {
-                        previewAudio.src = musicSelect.value;
-                    }
-                    previewAudio.play();
-                } else {
-                    previewAudio.pause();
-                }
-            });
-            
-            previewAudio.onplay = () => { previewMusicBtn.innerHTML = previewPauseIcon; };
-            previewAudio.onpause = () => { previewMusicBtn.innerHTML = previewPlayIcon; };
-            musicSelect.addEventListener('change', () => {
-                previewAudio.src = musicSelect.value;
-                previewAudio.play();
-            });
-
-            wishesForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                alert('Terima kasih! Ucapan Anda telah terkirim.');
-                wishesForm.reset();
-            });
+            } catch (error) {
+                console.error("Gagal menyimpan data tamu:", error);
+                alert("Gagal membuat tautan. Pastikan Security Rules sudah benar.");
+            }
         });
+
+        copyLinkBtn.addEventListener('click', () => copyToClipboard(guestLinkOutput.value, copyLinkBtn));
+        copyTemplateBtn.addEventListener('click', () => copyToClipboard(whatsappOutput.value, copyTemplateBtn));
+
+        wishesForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Terima kasih! Fitur ucapan akan segera diaktifkan.');
+            wishesForm.reset();
+        });
+
+        initializePage();
     </script>
 </body>
 </html>
