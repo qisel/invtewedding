@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Pernikahan - Rizky & Anisa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700&family=Dancing+Script:wght@700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for scroll snapping and animations */
+        :root {
+            --main-font: 'Montserrat', sans-serif;
+            --heading-font: 'Great Vibes', cursive;
+            --font-color: #333333;
+        }
+
+        body {
+            font-family: var(--main-font);
+            color: var(--font-color);
+            overscroll-behavior: contain;
+        }
+
+        .font-heading {
+            font-family: var(--heading-font);
+        }
+
+        .scroll-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+
+        .scroll-section {
+            scroll-snap-align: start;
+            height: 100vh;
+            width: 100%;
+            flex-shrink: 0;
+        }
+        
+        /* Falling petals effect */
+        .petal-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 999;
+        }
+
+        .petal {
+            position: absolute;
+            top: -20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="%23FFC0CB"><path d="M10 3.22l-.61-.6a5.5 5.5 0 00-7.78 7.77L10 18.78l8.39-8.4a5.5 5.5 0 00-7.78-7.77l-.61.61z" /></svg>');
+            background-size: contain;
+            width: 20px;
+            height: 20px;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 overflow-hidden">
+
+    <!-- Petal Effect Container -->
+    <div id="petal-effect-container" class="petal-container hidden"></div>
+
+    <!-- Cover Page -->
+    <div id="cover-page" class="h-screen w-screen bg-cover bg-center flex flex-col justify-center items-center text-white p-4" style="background-image: url('https://images.unsplash.com/photo-1523438885262-a52d3a1752a2?q=80&w=1887&auto=format&fit=crop');">
+        <div class="bg-black bg-opacity-50 p-8 rounded-lg text-center shadow-2xl">
+            <p class="text-lg md:text-xl mb-2">The Wedding Of</p>
+            <h1 class="font-heading text-6xl md:text-8xl mb-4">Rizky & Anisa</h1>
+            <p class="text-lg md:text-xl mb-8">25 Desember 2025</p>
+            <button id="open-invitation-btn" class="bg-white text-gray-800 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition duration-300">
+                Buka Undangan
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="hidden scroll-container">
+        <!-- Section 1: Opening -->
+        <section class="scroll-section flex justify-center items-center bg-stone-100 p-6">
+            <div class="text-center max-w-2xl">
+                <h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Assalamu'alaikum</h2>
+                <p class="text-lg mb-4">Maha suci Allah yang telah menciptakan makhluk-Nya berpasang-pasangan. Ya Allah, perkenankanlah kami merangkai kasih dalam ikatan pernikahan.</p>
+                <p class="font-bold text-xl">Rizky & Anisa</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Bride & Groom Profile -->
+        <section class="scroll-section flex justify-center items-center bg-stone-50 p-6">
+            <div class="text-center max-w-4xl">
+                <h2 class="font-heading text-5xl md:text-7xl mb-8 text-amber-800">Mempelai</h2>
+                <div class="flex flex-col md:flex-row gap-8 items-center">
+                    <!-- Groom -->
+                    <div class="w-full md:w-1/2">
+                        <img src="https://placehold.co/300x300/e2e8f0/333?text=Rizky" alt="Foto Rizky" class="w-48 h-48 mx-auto rounded-full object-cover shadow-lg mb-4">
+                        <h3 class="font-heading text-4xl text-amber-900">Rizky Pratama</h3>
+                        <p class="mt-2 text-gray-600">Putra dari Bapak John Doe & Ibu Jane Doe</p>
+                    </div>
+                    <!-- Bride -->
+                    <div class="w-full md:w-1/2">
+                        <img src="https://placehold.co/300x300/e2e8f0/333?text=Anisa" alt="Foto Anisa" class="w-48 h-48 mx-auto rounded-full object-cover shadow-lg mb-4">
+                        <h3 class="font-heading text-4xl text-amber-900">Anisa Rahmawati</h3>
+                        <p class="mt-2 text-gray-600">Putri dari Bapak Michael Smith & Ibu Sarah Smith</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Prayer & Hopes -->
+        <section class="scroll-section flex justify-center items-center bg-stone-100 p-6">
+            <div class="text-center max-w-2xl">
+                <h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Doa & Harapan</h2>
+                <p class="text-lg italic">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir."</p>
+                <p class="font-bold mt-4">(QS. Ar-Rum: 21)</p>
+            </div>
+        </section>
+        
+        <!-- Section 4: Event Details -->
+        <section class="scroll-section flex justify-center items-center bg-stone-50 p-6">
+            <div class="text-center max-w-4xl">
+                <h2 class="font-heading text-5xl md:text-7xl mb-8 text-amber-800">Detail Acara</h2>
+                <div class="flex flex-col md:flex-row gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md w-full">
+                        <h3 class="font-heading text-4xl text-amber-900 mb-2">Akad Nikah</h3>
+                        <p class="font-bold">Sabtu, 25 Desember 2025</p>
+                        <p>Pukul 09:00 - 11:00 WIB</p>
+                        <p class="mt-2">Masjid Istiqlal, Jakarta</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md w-full">
+                        <h3 class="font-heading text-4xl text-amber-900 mb-2">Resepsi</h3>
+                        <p class="font-bold">Sabtu, 25 Desember 2025</p>
+                        <p>Pukul 19:00 - 21:00 WIB</p>
+                        <p class="mt-2">Gedung Balai Kartini, Jakarta</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Closing -->
+        <section class="scroll-section flex justify-center items-center bg-stone-100 p-6">
+            <div class="text-center max-w-2xl">
+                <h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Terima Kasih</h2>
+                <p class="text-lg mb-4">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kami.</p>
+                <p class="font-bold text-xl">Hormat kami, Rizky & Anisa</p>
+            </div>
+        </section>
+
+        <!-- Section 6: Wishes -->
+        <section class="scroll-section flex justify-center items-center bg-stone-50 p-6">
+            <div class="text-center max-w-2xl w-full">
+                <h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Kirim Ucapan</h2>
+                <form class="w-full">
+                    <input type="text" placeholder="Nama Anda" class="w-full p-3 mb-4 border rounded-md">
+                    <textarea placeholder="Tulis ucapan & doa..." rows="4" class="w-full p-3 mb-4 border rounded-md"></textarea>
+                    <button type="submit" class="bg-amber-800 text-white font-bold py-3 px-8 rounded-full hover:bg-amber-900 transition duration-300">Kirim</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Section 7: E-Wallet Gift -->
+        <section class="scroll-section flex justify-center items-center bg-stone-100 p-6">
+            <div class="text-center max-w-2xl">
+                <h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Kirim Hadiah</h2>
+                <p class="mb-6">Doa restu Anda adalah hadiah terindah bagi kami. Namun, jika Anda ingin memberikan tanda kasih, kami menyediakan fitur di bawah ini.</p>
+                <div class="flex justify-center gap-4">
+                     <button class="bg-blue-500 text-white p-4 rounded-lg shadow-md">BCA</button>
+                     <button class="bg-yellow-400 text-black p-4 rounded-lg shadow-md">GoPay</button>
+                     <button class="bg-purple-600 text-white p-4 rounded-lg shadow-md">OVO</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 8: Promotion -->
+        <section class="scroll-section flex justify-center items-center bg-stone-50 p-6">
+            <div class="text-center max-w-2xl">
+                <h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Buat Undangan Anda</h2>
+                <p class="mb-6">Suka dengan undangan ini? Buat undangan digital impian Anda bersama kami.</p>
+                <a href="#" class="bg-green-600 text-white font-bold py-3 px-8 rounded-full hover:bg-green-700 transition duration-300">Hubungi Kami</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="hidden fixed bottom-16 right-5 bg-white p-6 rounded-lg shadow-2xl w-80 z-50 border">
+        <h3 class="font-bold text-lg mb-4">Panel Admin</h3>
+        
+        <!-- Font Selector -->
+        <div class="mb-4">
+            <label for="font-select" class="block text-sm font-medium text-gray-700">Jenis Huruf Judul</label>
+            <select id="font-select" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="'Great Vibes', cursive">Great Vibes</option>
+                <option value="'Dancing Script', cursive">Dancing Script</option>
+                <option value="'Playfair Display', serif">Playfair Display</option>
+            </select>
+        </div>
+
+        <!-- Font Color Selector -->
+        <div class="mb-4">
+            <label for="font-color" class="block text-sm font-medium text-gray-700">Warna Teks Utama</label>
+            <input type="color" id="font-color" value="#333333" class="mt-1 block w-full h-10 border border-gray-300 rounded-md">
+        </div>
+
+        <!-- Music Selector -->
+        <div class="mb-4">
+            <label for="music-select" class="block text-sm font-medium text-gray-700">Musik Latar</label>
+            <select id="music-select" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="https://files.catbox.moe/q9vol9.mp3">Romantic Piano</option>
+                <option value="https://files.catbox.moe/dqrd8a.mp3">Acoustic Wedding</option>
+                <option value="https://cdn.pixabay.com/audio/2022/08/04/audio_253f494689.mp3">Peaceful Garden</option>
+            </select>
+        </div>
+
+        <!-- Effect Selector -->
+        <div class="mb-4">
+            <label for="effect-select" class="block text-sm font-medium text-gray-700">Efek Latar</label>
+            <select id="effect-select" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="none">Tidak Ada</option>
+                <option value="petals">Kelopak Bunga</option>
+            </select>
+        </div>
+
+        <!-- Generate Link -->
+        <div class="mt-6">
+            <button id="generate-link-btn" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700">Buat Link Tamu</button>
+            <input type="text" id="guest-link-output" class="mt-2 w-full text-xs p-2 border rounded bg-gray-100" readonly placeholder="Link untuk tamu akan muncul di sini">
+            <button id="copy-link-btn" class="w-full mt-2 bg-gray-200 text-gray-800 text-xs py-1 px-2 rounded-md hover:bg-gray-300 hidden">Salin Link</button>
+        </div>
+    </div>
+
+    <!-- Admin Toggle Button -->
+    <button id="admin-toggle-btn" class="hidden fixed bottom-5 right-5 bg-blue-600 text-white rounded-full p-3 shadow-lg z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+    </button>
+    
+    <!-- Music Player -->
+    <audio id="background-music" loop></audio>
+    <button id="music-toggle-btn" class="hidden fixed bottom-5 left-5 bg-black bg-opacity-50 text-white rounded-full p-3 shadow-lg z-50">
+        <!-- Play/Pause Icon will be injected by JS -->
+    </button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM ELEMENTS ---
+            const coverPage = document.getElementById('cover-page');
+            const mainContent = document.getElementById('main-content');
+            const openInvitationBtn = document.getElementById('open-invitation-btn');
+            const backgroundMusic = document.getElementById('background-music');
+            const musicToggleButton = document.getElementById('music-toggle-btn');
+            
+            // Admin panel elements
+            const adminPanel = document.getElementById('admin-panel');
+            const adminToggleButton = document.getElementById('admin-toggle-btn');
+            const fontSelect = document.getElementById('font-select');
+            const fontColorInput = document.getElementById('font-color');
+            const musicSelect = document.getElementById('music-select');
+            const effectSelect = document.getElementById('effect-select');
+            const generateLinkBtn = document.getElementById('generate-link-btn');
+            const guestLinkOutput = document.getElementById('guest-link-output');
+            const copyLinkBtn = document.getElementById('copy-link-btn');
+
+            // Effect container
+            const petalContainer = document.getElementById('petal-effect-container');
+
+            // --- STATE ---
+            let isMusicPlaying = false;
+            let currentSettings = {
+                font: "'Great Vibes', cursive",
+                color: '#333333',
+                music: 'https://cdn.pixabay.com/audio/2022/11/17/audio_85d1374561.mp3',
+                effect: 'none'
+            };
+
+            // --- ICONS ---
+            const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+            const pauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+
+            // --- FUNCTIONS ---
+
+            // Function to apply settings to the page
+            const applySettings = (settings) => {
+                document.documentElement.style.setProperty('--heading-font', settings.font);
+                document.documentElement.style.setProperty('--font-color', settings.color);
+                
+                // FIX: Check if the source is different before setting and loading
+                // This prevents unnecessary reloads and ensures the media is ready.
+                if (backgroundMusic.src !== settings.music) {
+                    backgroundMusic.src = settings.music;
+                    backgroundMusic.load();
+                }
+
+                // Handle effects
+                petalContainer.innerHTML = ''; // Clear previous effects
+                if (settings.effect === 'petals') {
+                    petalContainer.classList.remove('hidden');
+                    for (let i = 0; i < 30; i++) {
+                        const petal = document.createElement('div');
+                        petal.className = 'petal';
+                        petal.style.left = `${Math.random() * 100}vw`;
+                        petal.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                        petal.style.animationDelay = `${Math.random() * 5}s`;
+                        petalContainer.appendChild(petal);
+                    }
+                } else {
+                    petalContainer.classList.add('hidden');
+                }
+            };
+
+            // Function to update live preview for admin
+            const updateAdminPreview = () => {
+                currentSettings.font = fontSelect.value;
+                currentSettings.color = fontColorInput.value;
+                currentSettings.music = musicSelect.value;
+                currentSettings.effect = effectSelect.value;
+                applySettings(currentSettings);
+            };
+
+            // Function to toggle music play/pause
+            const toggleMusic = () => {
+                if (isMusicPlaying) {
+                    backgroundMusic.pause();
+                    musicToggleButton.innerHTML = playIcon;
+                } else {
+                    backgroundMusic.play().catch(e => console.error("Audio play failed:", e));
+                    musicToggleButton.innerHTML = pauseIcon;
+                }
+                isMusicPlaying = !isMusicPlaying;
+            };
+
+            // --- INITIALIZATION ---
+            
+            // Check for guest link parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const guestData = urlParams.get('guest');
+
+            if (guestData) {
+                // This is a guest link
+                try {
+                    const decodedSettings = JSON.parse(atob(guestData));
+                    currentSettings = decodedSettings;
+                } catch (e) {
+                    console.error("Failed to parse guest settings, using defaults.", e);
+                }
+                adminToggleButton.classList.add('hidden');
+            } else {
+                // This is the default/admin link
+                adminToggleButton.classList.remove('hidden');
+            }
+            
+            // Apply initial settings
+            applySettings(currentSettings);
+            musicToggleButton.innerHTML = playIcon; // Start with play icon
+
+            // --- EVENT LISTENERS ---
+
+            // Open invitation
+            openInvitationBtn.addEventListener('click', () => {
+                coverPage.style.transition = 'opacity 1s ease-out';
+                coverPage.style.opacity = '0';
+                setTimeout(() => {
+                    coverPage.classList.add('hidden');
+                    mainContent.classList.remove('hidden');
+                    musicToggleButton.classList.remove('hidden');
+                    toggleMusic(); // Autoplay music on user interaction
+                }, 1000);
+            });
+
+            // Music toggle button
+            musicToggleButton.addEventListener('click', toggleMusic);
+
+            // Admin: Toggle panel visibility
+            adminToggleButton.addEventListener('click', () => {
+                adminPanel.classList.toggle('hidden');
+            });
+
+            // Admin: Live preview changes
+            fontSelect.addEventListener('change', updateAdminPreview);
+            fontColorInput.addEventListener('input', updateAdminPreview);
+            musicSelect.addEventListener('change', updateAdminPreview);
+            effectSelect.addEventListener('change', updateAdminPreview);
+
+            // Admin: Generate guest link
+            generateLinkBtn.addEventListener('click', () => {
+                const settingsString = JSON.stringify(currentSettings);
+                const encodedSettings = btoa(settingsString);
+                const guestLink = `${window.location.origin}${window.location.pathname}?guest=${encodedSettings}`;
+                guestLinkOutput.value = guestLink;
+                copyLinkBtn.classList.remove('hidden');
+                copyLinkBtn.textContent = 'Salin Link';
+            });
+
+            // Admin: Copy link to clipboard
+            copyLinkBtn.addEventListener('click', () => {
+                guestLinkOutput.select();
+                document.execCommand('copy');
+                copyLinkBtn.textContent = 'Tersalin!';
+            });
+        });
+    </script>
+</body>
+</html>
