@@ -7,403 +7,279 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700&family=Dancing+Script:wght@700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700&family=Dancing+Script:wght@700&family=Playfair+Display:ital@1&family=Pacifico&family=Caveat&family=Lobster&family=Sacramento&family=Merriweather&family=Lato&family=Roboto&display=swap" rel="stylesheet">
     <style>
-        /* Custom CSS for scroll snapping and animations */
         :root {
             --main-font: 'Montserrat', sans-serif;
             --heading-font: 'Great Vibes', cursive;
             --font-color: #333333;
+            --cover-font-color: #FFFFFF;
         }
-
-        body {
-            font-family: var(--main-font);
-            color: var(--font-color);
-            overscroll-behavior: contain;
-        }
-
-        .font-heading {
-            font-family: var(--heading-font);
-        }
-
-        .scroll-container {
-            scroll-snap-type: y mandatory;
-            overflow-y: scroll;
-            height: 100vh;
-        }
-
-        .scroll-section {
-            scroll-snap-align: start;
-            height: 100vh;
-            width: 100%;
-            flex-shrink: 0;
-        }
-        
-        /* Falling petals effect */
-        .petal-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 999;
-        }
-
-        .petal {
-            position: absolute;
-            top: -20px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="%23FFC0CB"><path d="M10 3.22l-.61-.6a5.5 5.5 0 00-7.78 7.77L10 18.78l8.39-8.4a5.5 5.5 0 00-7.78-7.77l-.61.61z" /></svg>');
-            background-size: contain;
-            width: 20px;
-            height: 20px;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            to {
-                transform: translateY(105vh) rotate(360deg);
-            }
-        }
+        body { font-family: var(--main-font); color: var(--font-color); overscroll-behavior: contain; }
+        .font-heading { font-family: var(--heading-font); }
+        #cover h1, #cover p { color: var(--cover-font-color); }
+        .scroll-container { scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+        .scroll-section { scroll-snap-align: start; height: 100vh; width: 100%; flex-shrink: 0; display: flex; justify-content: center; align-items: center; padding: 1.5rem; }
+        .effect-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 999; }
+        .petal { position: absolute; top: -20px; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="%23FFC0CB"><path d="M10 3.22l-.61-.6a5.5 5.5 0 00-7.78 7.77L10 18.78l8.39-8.4a5.5 5.5 0 00-7.78-7.77l-.61.61z" /></svg>'); background-size: contain; width: 20px; height: 20px; animation: fall 10s linear infinite; }
+        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
+        .snow { position: absolute; top: -10px; width: 10px; height: 10px; background: white; border-radius: 50%; animation: fall 15s linear infinite; }
+        .confetti { position: absolute; top: -15px; width: 10px; height: 15px; opacity: 0.8; animation: fall 8s linear infinite; }
+        .heart { position: absolute; top: -20px; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FF4B4B"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'); background-size: contain; width: 20px; height: 20px; animation: fall 10s linear infinite; }
+        .bubble { position: absolute; bottom: -20px; width: 20px; height: 20px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; animation: rise 10s linear infinite; }
+        @keyframes rise { to { transform: translateY(-105vh); opacity: 0; } }
+        .star { position: absolute; width: 3px; height: 3px; background: white; border-radius: 50%; animation: twinkle 5s linear infinite; }
+        @keyframes twinkle { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
     </style>
 </head>
 <body class="bg-gray-100 overflow-hidden">
 
-    <!-- Petal Effect Container -->
-    <div id="petal-effect-container" class="petal-container hidden"></div>
+    <div id="effect-container" class="effect-container hidden"></div>
 
     <!-- Cover Page -->
-    <div id="cover-page" class="h-screen w-screen bg-cover bg-center flex flex-col justify-center items-center text-white p-4" style="background-image: url('https://images.unsplash.com/photo-1523438885262-a52d3a1752a2?q=80&w=1887&auto=format&fit=crop');">
+    <div id="cover-page" class="relative h-screen w-screen bg-cover bg-center flex flex-col justify-center items-center text-white p-4" style="background-image: url('https://images.unsplash.com/photo-1523438885262-a52d3a1752a2?q=80&w=1887&auto=format&fit=crop');">
         <div class="bg-black bg-opacity-50 p-8 rounded-lg text-center shadow-2xl">
             <p class="text-lg md:text-xl mb-2">The Wedding Of</p>
             <h1 class="font-heading text-6xl md:text-8xl mb-4">Rizky & Anisa</h1>
-            <p class="text-lg md:text-xl mb-8">25 Desember 2025</p>
-            <button id="open-invitation-btn" class="bg-white text-gray-800 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition duration-300">
+            <p class="text-lg md:text-xl mb-4">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
+            <p id="guest-name" class="text-2xl font-bold">Tamu Undangan</p>
+            <button id="open-invitation-btn" class="bg-white text-gray-800 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition duration-300 mt-8">
                 Buka Undangan
             </button>
         </div>
+        
+        <button id="admin-toggle-btn" class="hidden absolute bottom-5 right-5 bg-blue-600 text-white rounded-full p-2.5 shadow-lg z-50">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+        </button>
     </div>
 
     <!-- Main Content -->
     <div id="main-content" class="hidden scroll-container">
-        <!-- Section 1: Opening -->
-        <section class="scroll-section flex justify-center items-center bg-stone-100 p-6">
-            <div class="text-center max-w-2xl">
-                <h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Assalamu'alaikum</h2>
-                <p class="text-lg mb-4">Maha suci Allah yang telah menciptakan makhluk-Nya berpasang-pasangan. Ya Allah, perkenankanlah kami merangkai kasih dalam ikatan pernikahan.</p>
-                <p class="font-bold text-xl">Rizky & Anisa</p>
-            </div>
-        </section>
-
-        <!-- Section 2: Bride & Groom Profile -->
-        <section class="scroll-section flex justify-center items-center bg-stone-50 p-6">
-            <div class="text-center max-w-4xl">
-                <h2 class="font-heading text-5xl md:text-7xl mb-8 text-amber-800">Mempelai</h2>
-                <div class="flex flex-col md:flex-row gap-8 items-center">
-                    <!-- Groom -->
-                    <div class="w-full md:w-1/2">
-                        <img src="https://placehold.co/300x300/e2e8f0/333?text=Rizky" alt="Foto Rizky" class="w-48 h-48 mx-auto rounded-full object-cover shadow-lg mb-4">
-                        <h3 class="font-heading text-4xl text-amber-900">Rizky Pratama</h3>
-                        <p class="mt-2 text-gray-600">Putra dari Bapak John Doe & Ibu Jane Doe</p>
-                    </div>
-                    <!-- Bride -->
-                    <div class="w-full md:w-1/2">
-                        <img src="https://placehold.co/300x300/e2e8f0/333?text=Anisa" alt="Foto Anisa" class="w-48 h-48 mx-auto rounded-full object-cover shadow-lg mb-4">
-                        <h3 class="font-heading text-4xl text-amber-900">Anisa Rahmawati</h3>
-                        <p class="mt-2 text-gray-600">Putri dari Bapak Michael Smith & Ibu Sarah Smith</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 3: Prayer & Hopes -->
-        <section class="scroll-section flex justify-center items-center bg-stone-100 p-6">
-            <div class="text-center max-w-2xl">
-                <h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Doa & Harapan</h2>
-                <p class="text-lg italic">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir."</p>
-                <p class="font-bold mt-4">(QS. Ar-Rum: 21)</p>
-            </div>
-        </section>
-        
-        <!-- Section 4: Event Details -->
-        <section class="scroll-section flex justify-center items-center bg-stone-50 p-6">
-            <div class="text-center max-w-4xl">
-                <h2 class="font-heading text-5xl md:text-7xl mb-8 text-amber-800">Detail Acara</h2>
-                <div class="flex flex-col md:flex-row gap-8">
-                    <div class="bg-white p-6 rounded-lg shadow-md w-full">
-                        <h3 class="font-heading text-4xl text-amber-900 mb-2">Akad Nikah</h3>
-                        <p class="font-bold">Sabtu, 25 Desember 2025</p>
-                        <p>Pukul 09:00 - 11:00 WIB</p>
-                        <p class="mt-2">Masjid Istiqlal, Jakarta</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md w-full">
-                        <h3 class="font-heading text-4xl text-amber-900 mb-2">Resepsi</h3>
-                        <p class="font-bold">Sabtu, 25 Desember 2025</p>
-                        <p>Pukul 19:00 - 21:00 WIB</p>
-                        <p class="mt-2">Gedung Balai Kartini, Jakarta</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 5: Closing -->
-        <section class="scroll-section flex justify-center items-center bg-stone-100 p-6">
-            <div class="text-center max-w-2xl">
-                <h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Terima Kasih</h2>
-                <p class="text-lg mb-4">Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kami.</p>
-                <p class="font-bold text-xl">Hormat kami, Rizky & Anisa</p>
-            </div>
-        </section>
-
-        <!-- Section 6: Wishes -->
-        <section class="scroll-section flex justify-center items-center bg-stone-50 p-6">
-            <div class="text-center max-w-2xl w-full">
-                <h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Kirim Ucapan</h2>
-                <form class="w-full">
-                    <input type="text" placeholder="Nama Anda" class="w-full p-3 mb-4 border rounded-md">
-                    <textarea placeholder="Tulis ucapan & doa..." rows="4" class="w-full p-3 mb-4 border rounded-md"></textarea>
-                    <button type="submit" class="bg-amber-800 text-white font-bold py-3 px-8 rounded-full hover:bg-amber-900 transition duration-300">Kirim</button>
-                </form>
-            </div>
-        </section>
-
-        <!-- Section 7: E-Wallet Gift -->
-        <section class="scroll-section flex justify-center items-center bg-stone-100 p-6">
-            <div class="text-center max-w-2xl">
-                <h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Kirim Hadiah</h2>
-                <p class="mb-6">Doa restu Anda adalah hadiah terindah bagi kami. Namun, jika Anda ingin memberikan tanda kasih, kami menyediakan fitur di bawah ini.</p>
-                <div class="flex justify-center gap-4">
-                     <button class="bg-blue-500 text-white p-4 rounded-lg shadow-md">BCA</button>
-                     <button class="bg-yellow-400 text-black p-4 rounded-lg shadow-md">GoPay</button>
-                     <button class="bg-purple-600 text-white p-4 rounded-lg shadow-md">OVO</button>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Section 8: Promotion -->
-        <section class="scroll-section flex justify-center items-center bg-stone-50 p-6">
-            <div class="text-center max-w-2xl">
-                <h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Buat Undangan Anda</h2>
-                <p class="mb-6">Suka dengan undangan ini? Buat undangan digital impian Anda bersama kami.</p>
-                <a href="#" class="bg-green-600 text-white font-bold py-3 px-8 rounded-full hover:bg-green-700 transition duration-300">Hubungi Kami</a>
-            </div>
-        </section>
+        <section class="scroll-section bg-stone-100"><div class="text-center max-w-2xl"><h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Assalamu'alaikum</h2><p class="text-lg mb-4">Maha suci Allah yang telah menciptakan makhluk-Nya berpasang-pasangan. Ya Allah, perkenankanlah kami merangkai kasih dalam ikatan pernikahan.</p><p class="font-bold text-xl">Rizky & Anisa</p></div></section>
+        <section class="scroll-section bg-stone-50"><div class="text-center max-w-4xl"><h2 class="font-heading text-5xl md:text-7xl mb-8 text-amber-800">Mempelai</h2><div class="flex flex-col md:flex-row gap-8 items-center"><div class="w-full md:w-1/2"><img src="https://placehold.co/300x300/e2e8f0/333?text=Rizky" alt="Foto Rizky" class="w-48 h-48 mx-auto rounded-full object-cover shadow-lg mb-4"><h3 class="font-heading text-4xl text-amber-900">Rizky Pratama</h3><p class="mt-2 text-gray-600">Putra dari Bapak John Doe & Ibu Jane Doe</p></div><div class="w-full md:w-1/2"><img src="https://placehold.co/300x300/e2e8f0/333?text=Anisa" alt="Foto Anisa" class="w-48 h-48 mx-auto rounded-full object-cover shadow-lg mb-4"><h3 class="font-heading text-4xl text-amber-900">Anisa Rahmawati</h3><p class="mt-2 text-gray-600">Putri dari Bapak Michael Smith & Ibu Sarah Smith</p></div></div></div></section>
+        <section class="scroll-section bg-stone-100"><div class="text-center max-w-2xl"><h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Doa & Harapan</h2><p class="text-lg italic">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir."</p><p class="font-bold mt-4">(QS. Ar-Rum: 21)</p></div></section>
+        <section class="scroll-section bg-stone-50"><div class="text-center max-w-2xl w-full"><h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Kirim Ucapan</h2><form id="wishes-form" class="w-full"><input type="text" placeholder="Nama Anda" class="w-full p-3 mb-4 border rounded-md"><textarea placeholder="Tulis ucapan & doa..." rows="4" class="w-full p-3 mb-4 border rounded-md"></textarea><button type="submit" class="bg-amber-800 text-white font-bold py-3 px-8 rounded-full hover:bg-amber-900 transition duration-300">Kirim</button></form></div></section>
     </div>
 
     <!-- Admin Panel -->
-    <div id="admin-panel" class="hidden fixed bottom-16 right-5 bg-white p-6 rounded-lg shadow-2xl w-80 z-50 border">
-        <h3 class="font-bold text-lg mb-4">Panel Admin</h3>
-        
-        <!-- Font Selector -->
-        <div class="mb-4">
-            <label for="font-select" class="block text-sm font-medium text-gray-700">Jenis Huruf Judul</label>
-            <select id="font-select" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option value="'Great Vibes', cursive">Great Vibes</option>
-                <option value="'Dancing Script', cursive">Dancing Script</option>
-                <option value="'Playfair Display', serif">Playfair Display</option>
-            </select>
+    <div id="admin-panel" class="hidden fixed bottom-5 right-20 bg-white p-6 rounded-lg shadow-2xl w-96 z-50 border max-h-[85vh] overflow-y-auto">
+        <h3 class="font-bold text-lg mb-4">Panel Admin Undangan</h3>
+        <div class="space-y-4">
+            <div><label class="block text-sm font-medium text-gray-700 mb-1">Nama Tamu</label><input type="text" id="guest-name-input" class="w-full p-2 border rounded-md" placeholder="Contoh: John Doe"></div>
+            <div><label class="block text-sm font-medium text-gray-700 mb-1">Jenis Huruf Judul</label><select id="font-select" class="w-full p-2 border rounded-md"><option value="'Great Vibes', cursive" style="font-family: 'Great Vibes', cursive; font-size: 1.2rem;">Great Vibes</option><option value="'Dancing Script', cursive" style="font-family: 'Dancing Script', cursive; font-size: 1.2rem;">Dancing Script</option><option value="'Playfair Display', serif" style="font-family: 'Playfair Display', serif;">Playfair Display</option><option value="'Pacifico', cursive" style="font-family: 'Pacifico', cursive; font-size: 1.1rem;">Pacifico</option><option value="'Caveat', cursive" style="font-family: 'Caveat', cursive; font-size: 1.3rem;">Caveat</option><option value="'Lobster', cursive" style="font-family: 'Lobster', cursive; font-size: 1.1rem;">Lobster</option><option value="'Sacramento', cursive" style="font-family: 'Sacramento', cursive; font-size: 1.5rem;">Sacramento</option><option value="'Merriweather', serif" style="font-family: 'Merriweather', serif;">Merriweather</option><option value="'Lato', sans-serif" style="font-family: 'Lato', sans-serif;">Lato</option><option value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto</option></select></div>
+            <div><label class="block text-sm font-medium text-gray-700 mb-1">Warna Teks Sampul</label><input type="color" id="font-color" value="#FFFFFF" class="w-full h-10 border rounded-md"></div>
+            <div><label class="block text-sm font-medium text-gray-700 mb-1">Musik Latar</label><div class="flex items-center gap-2"><select id="music-select" class="w-full p-2 border rounded-md"><option value="https://files.catbox.moe/q9vol9.mp3">Music 1</option><option value="https://files.catbox.moe/dqrd8a.mp3">Music 2</option><option value="https://files.catbox.moe/q4p716.mp3">Music 3</option></select><button id="preview-music-btn" class="p-2 border rounded-md bg-gray-100 hover:bg-gray-200"></button></div></div>
+            <div><label class="block text-sm font-medium text-gray-700 mb-1">Efek Latar</label><select id="effect-select" class="w-full p-2 border rounded-md"><option value="none">Tidak Ada</option><option value="petals">Kelopak Bunga</option><option value="snow">Salju</option><option value="confetti">Konfeti</option><option value="hearts">Hati Jatuh</option><option value="bubbles">Gelembung</option><option value="stars">Bintang Berkelip</option></select></div>
         </div>
-
-        <!-- Font Color Selector -->
-        <div class="mb-4">
-            <label for="font-color" class="block text-sm font-medium text-gray-700">Warna Teks Utama</label>
-            <input type="color" id="font-color" value="#333333" class="mt-1 block w-full h-10 border border-gray-300 rounded-md">
-        </div>
-
-        <!-- Music Selector -->
-        <div class="mb-4">
-            <label for="music-select" class="block text-sm font-medium text-gray-700">Musik Latar</label>
-            <select id="music-select" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option value="https://files.catbox.moe/q9vol9.mp3">Romantic Piano</option>
-                <option value="https://files.catbox.moe/dqrd8a.mp3">Acoustic Wedding</option>
-                <option value="https://cdn.pixabay.com/audio/2022/08/04/audio_253f494689.mp3">Peaceful Garden</option>
-            </select>
-        </div>
-
-        <!-- Effect Selector -->
-        <div class="mb-4">
-            <label for="effect-select" class="block text-sm font-medium text-gray-700">Efek Latar</label>
-            <select id="effect-select" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option value="none">Tidak Ada</option>
-                <option value="petals">Kelopak Bunga</option>
-            </select>
-        </div>
-
-        <!-- Generate Link -->
         <div class="mt-6">
-            <button id="generate-link-btn" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700">Buat Link Tamu</button>
-            <input type="text" id="guest-link-output" class="mt-2 w-full text-xs p-2 border rounded bg-gray-100" readonly placeholder="Link untuk tamu akan muncul di sini">
-            <button id="copy-link-btn" class="w-full mt-2 bg-gray-200 text-gray-800 text-xs py-1 px-2 rounded-md hover:bg-gray-300 hidden">Salin Link</button>
+            <button id="generate-link-btn" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700">Buat Link & Pesan</button>
+            <div id="output-area" class="hidden mt-4 space-y-3">
+                <div><label class="block text-xs font-medium text-gray-600">Tautan Unik Tamu:</label><div class="flex"><input type="text" id="guest-link-output" class="w-full text-xs p-2 border rounded-l-md bg-gray-100" readonly><button id="copy-link-btn" class="bg-gray-200 text-gray-700 px-3 rounded-r-md text-xs">Salin</button></div></div>
+                <div><label class="block text-xs font-medium text-gray-600">Templat Pesan WhatsApp:</label><textarea id="whatsapp-output" rows="8" class="w-full text-xs p-2 border rounded-md bg-gray-100" readonly></textarea><button id="copy-template-btn" class="w-full mt-1 bg-green-600 text-white py-1.5 rounded-md text-xs">Salin Pesan Undangan</button></div>
+            </div>
         </div>
     </div>
-
-    <!-- Admin Toggle Button -->
-    <button id="admin-toggle-btn" class="hidden fixed bottom-5 right-5 bg-blue-600 text-white rounded-full p-3 shadow-lg z-50">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-    </button>
     
-    <!-- Music Player -->
     <audio id="background-music" loop></audio>
-    <button id="music-toggle-btn" class="hidden fixed bottom-5 left-5 bg-black bg-opacity-50 text-white rounded-full p-3 shadow-lg z-50">
-        <!-- Play/Pause Icon will be injected by JS -->
-    </button>
+    <button id="music-toggle-btn" class="hidden fixed bottom-5 left-5 bg-black bg-opacity-50 text-white rounded-full p-3 shadow-lg z-50"></button>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- DOM ELEMENTS ---
             const coverPage = document.getElementById('cover-page');
             const mainContent = document.getElementById('main-content');
             const openInvitationBtn = document.getElementById('open-invitation-btn');
             const backgroundMusic = document.getElementById('background-music');
             const musicToggleButton = document.getElementById('music-toggle-btn');
-            
-            // Admin panel elements
             const adminPanel = document.getElementById('admin-panel');
             const adminToggleButton = document.getElementById('admin-toggle-btn');
+            const effectContainer = document.getElementById('effect-container');
+            const wishesForm = document.getElementById('wishes-form');
+            const guestNameDisplay = document.getElementById('guest-name');
+
+            // Admin Panel Elements
             const fontSelect = document.getElementById('font-select');
             const fontColorInput = document.getElementById('font-color');
             const musicSelect = document.getElementById('music-select');
+            const previewMusicBtn = document.getElementById('preview-music-btn');
             const effectSelect = document.getElementById('effect-select');
+            const guestNameInput = document.getElementById('guest-name-input');
             const generateLinkBtn = document.getElementById('generate-link-btn');
+            const outputArea = document.getElementById('output-area');
             const guestLinkOutput = document.getElementById('guest-link-output');
             const copyLinkBtn = document.getElementById('copy-link-btn');
+            const whatsappOutput = document.getElementById('whatsapp-output');
+            const copyTemplateBtn = document.getElementById('copy-template-btn');
 
-            // Effect container
-            const petalContainer = document.getElementById('petal-effect-container');
-
-            // --- STATE ---
             let isMusicPlaying = false;
+            const previewAudio = new Audio();
             let currentSettings = {
                 font: "'Great Vibes', cursive",
-                color: '#333333',
-                music: 'https://cdn.pixabay.com/audio/2022/11/17/audio_85d1374561.mp3',
+                color: '#FFFFFF',
+                music: 'https://files.catbox.moe/q9vol9.mp3',
                 effect: 'none'
             };
 
-            // --- ICONS ---
             const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
             const pauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+            const previewPlayIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
+            const previewPauseIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>`;
+            
+            previewMusicBtn.innerHTML = previewPlayIcon;
 
-            // --- FUNCTIONS ---
+            function createParticle(type) {
+                const particle = document.createElement('div');
+                particle.style.left = `${Math.random() * 100}vw`;
+                particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                if (type === 'petals') particle.className = 'petal';
+                else if (type === 'snow') particle.className = 'snow';
+                else if (type === 'confetti') {
+                    const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800'];
+                    particle.className = 'confetti';
+                    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                } else if (type === 'hearts') particle.className = 'heart';
+                else if (type === 'bubbles') particle.className = 'bubble';
+                else if (type === 'stars') {
+                    particle.className = 'star';
+                    particle.style.top = `${Math.random() * 100}vh`;
+                }
+                effectContainer.appendChild(particle);
+            }
 
-            // Function to apply settings to the page
-            const applySettings = (settings) => {
+            function applyEffect(effectType) {
+                effectContainer.innerHTML = '';
+                if (effectType !== 'none') {
+                    effectContainer.classList.remove('hidden');
+                    for (let i = 0; i < 30; i++) createParticle(effectType);
+                } else {
+                    effectContainer.classList.add('hidden');
+                }
+            }
+
+            function applySettings(settings) {
                 document.documentElement.style.setProperty('--heading-font', settings.font);
-                document.documentElement.style.setProperty('--font-color', settings.color);
-                
-                // FIX: Check if the source is different before setting and loading
-                // This prevents unnecessary reloads and ensures the media is ready.
+                document.documentElement.style.setProperty('--cover-font-color', settings.color);
                 if (backgroundMusic.src !== settings.music) {
                     backgroundMusic.src = settings.music;
                     backgroundMusic.load();
                 }
+                applyEffect(settings.effect);
+            }
 
-                // Handle effects
-                petalContainer.innerHTML = ''; // Clear previous effects
-                if (settings.effect === 'petals') {
-                    petalContainer.classList.remove('hidden');
-                    for (let i = 0; i < 30; i++) {
-                        const petal = document.createElement('div');
-                        petal.className = 'petal';
-                        petal.style.left = `${Math.random() * 100}vw`;
-                        petal.style.animationDuration = `${Math.random() * 5 + 5}s`;
-                        petal.style.animationDelay = `${Math.random() * 5}s`;
-                        petalContainer.appendChild(petal);
-                    }
-                } else {
-                    petalContainer.classList.add('hidden');
-                }
-            };
-
-            // Function to update live preview for admin
-            const updateAdminPreview = () => {
-                currentSettings.font = fontSelect.value;
-                currentSettings.color = fontColorInput.value;
-                currentSettings.music = musicSelect.value;
-                currentSettings.effect = effectSelect.value;
-                applySettings(currentSettings);
-            };
-
-            // Function to toggle music play/pause
-            const toggleMusic = () => {
-                if (isMusicPlaying) {
-                    backgroundMusic.pause();
-                    musicToggleButton.innerHTML = playIcon;
-                } else {
-                    backgroundMusic.play().catch(e => console.error("Audio play failed:", e));
-                    musicToggleButton.innerHTML = pauseIcon;
-                }
+            function toggleMusic() {
+                if (isMusicPlaying) { backgroundMusic.pause(); musicToggleButton.innerHTML = playIcon; } 
+                else { backgroundMusic.play().catch(e => console.error("Audio play failed:", e)); musicToggleButton.innerHTML = pauseIcon; }
                 isMusicPlaying = !isMusicPlaying;
-            };
+            }
 
-            // --- INITIALIZATION ---
-            
-            // Check for guest link parameter
+            function copyToClipboard(text, button) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalText = button.textContent;
+                    button.textContent = 'Tersalin!';
+                    setTimeout(() => { button.textContent = originalText; }, 2000);
+                }).catch(err => console.error('Gagal menyalin:', err));
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
-            const guestData = urlParams.get('guest');
+            const guestNameParam = urlParams.get('to');
+            const settingsParam = urlParams.get('settings');
 
-            if (guestData) {
-                // This is a guest link
-                try {
-                    const decodedSettings = JSON.parse(atob(guestData));
-                    currentSettings = decodedSettings;
-                } catch (e) {
-                    console.error("Failed to parse guest settings, using defaults.", e);
-                }
+            if (guestNameParam) {
+                guestNameDisplay.textContent = decodeURIComponent(guestNameParam);
                 adminToggleButton.classList.add('hidden');
+            }
+            
+            if (settingsParam) {
+                try {
+                    currentSettings = JSON.parse(atob(settingsParam));
+                } catch (e) {
+                    console.error("Gagal memuat pengaturan tamu, menggunakan default.", e);
+                }
             } else {
-                // This is the default/admin link
                 adminToggleButton.classList.remove('hidden');
             }
             
-            // Apply initial settings
             applySettings(currentSettings);
-            musicToggleButton.innerHTML = playIcon; // Start with play icon
+            musicToggleButton.innerHTML = playIcon;
 
-            // --- EVENT LISTENERS ---
-
-            // Open invitation
             openInvitationBtn.addEventListener('click', () => {
+                adminPanel.classList.add('hidden');
+                previewAudio.pause();
                 coverPage.style.transition = 'opacity 1s ease-out';
                 coverPage.style.opacity = '0';
                 setTimeout(() => {
-                    coverPage.classList.add('hidden');
+                    coverPage.style.display = 'none';
                     mainContent.classList.remove('hidden');
                     musicToggleButton.classList.remove('hidden');
-                    toggleMusic(); // Autoplay music on user interaction
+                    toggleMusic();
                 }, 1000);
             });
 
-            // Music toggle button
             musicToggleButton.addEventListener('click', toggleMusic);
+            adminToggleButton.addEventListener('click', () => adminPanel.classList.toggle('hidden'));
 
-            // Admin: Toggle panel visibility
-            adminToggleButton.addEventListener('click', () => {
-                adminPanel.classList.toggle('hidden');
+            // Event Listeners for live preview in Admin Panel
+            fontSelect.addEventListener('change', () => {
+                document.documentElement.style.setProperty('--heading-font', fontSelect.value);
+            });
+            fontColorInput.addEventListener('input', () => {
+                document.documentElement.style.setProperty('--cover-font-color', fontColorInput.value);
+            });
+            effectSelect.addEventListener('change', () => {
+                applyEffect(effectSelect.value);
             });
 
-            // Admin: Live preview changes
-            fontSelect.addEventListener('change', updateAdminPreview);
-            fontColorInput.addEventListener('input', updateAdminPreview);
-            musicSelect.addEventListener('change', updateAdminPreview);
-            effectSelect.addEventListener('change', updateAdminPreview);
-
-            // Admin: Generate guest link
             generateLinkBtn.addEventListener('click', () => {
-                const settingsString = JSON.stringify(currentSettings);
-                const encodedSettings = btoa(settingsString);
-                const guestLink = `${window.location.origin}${window.location.pathname}?guest=${encodedSettings}`;
-                guestLinkOutput.value = guestLink;
-                copyLinkBtn.classList.remove('hidden');
-                copyLinkBtn.textContent = 'Salin Link';
+                const guestName = guestNameInput.value.trim();
+                if (!guestName) {
+                    alert('Silakan masukkan nama tamu terlebih dahulu.');
+                    return;
+                }
+
+                const currentSelections = {
+                    font: fontSelect.value,
+                    color: fontColorInput.value,
+                    music: musicSelect.value,
+                    effect: effectSelect.value
+                };
+
+                const settingsString = btoa(JSON.stringify(currentSelections));
+                const baseUrl = window.location.href.split('?')[0];
+                const guestUrl = `${baseUrl}?to=${encodeURIComponent(guestName)}&settings=${settingsString}`;
+                
+                guestLinkOutput.value = guestUrl;
+
+                const template = `Assalamualaikum Warahmatullahi Wabarakatuh\n\nTanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i:\n\n*${guestName}*\n\nUntuk hadir di acara pernikahan kami. Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Anda berkenan hadir untuk memberikan doa restu.\n\nUntuk detail acara, silakan buka tautan di bawah ini:\n${guestUrl}\n\nTerima kasih.\n\nWassalamualaikum Warahmatullahi Wabarakatuh\n\n- Rizky & Anisa`;
+                whatsappOutput.value = template;
+                
+                outputArea.classList.remove('hidden');
             });
 
-            // Admin: Copy link to clipboard
-            copyLinkBtn.addEventListener('click', () => {
-                guestLinkOutput.select();
-                document.execCommand('copy');
-                copyLinkBtn.textContent = 'Tersalin!';
+            copyLinkBtn.addEventListener('click', () => copyToClipboard(guestLinkOutput.value, copyLinkBtn));
+            copyTemplateBtn.addEventListener('click', () => copyToClipboard(whatsappOutput.value, copyTemplateBtn));
+
+            previewMusicBtn.addEventListener('click', () => {
+                if (previewAudio.paused) {
+                    if (!previewAudio.src || previewAudio.src !== musicSelect.value) {
+                        previewAudio.src = musicSelect.value;
+                    }
+                    previewAudio.play();
+                } else {
+                    previewAudio.pause();
+                }
+            });
+            
+            previewAudio.onplay = () => { previewMusicBtn.innerHTML = previewPauseIcon; };
+            previewAudio.onpause = () => { previewMusicBtn.innerHTML = previewPlayIcon; };
+            musicSelect.addEventListener('change', () => {
+                previewAudio.src = musicSelect.value;
+                previewAudio.play();
+            });
+
+            wishesForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Terima kasih! Ucapan Anda telah terkirim.');
+                wishesForm.reset();
             });
         });
     </script>
