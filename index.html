@@ -98,10 +98,11 @@
         </div>
     </div>
 
+    <!-- Firebase SDKs for Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, addDoc, collection, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBcHvkLmeQRx1b_z8YPxqXA4MwBCPFtZvE",
             authDomain: "undangan-digital-saya-b970e.firebaseapp.com",
@@ -112,10 +113,8 @@
             appId: "1:776870269876:web:760c755c643ab95bbe58e1",
             measurementId: "G-N8X69CZHBS"
         };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const invitationsRef = database.ref('invitations');
-        const wishesRef = database.ref('wishes');
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
         document.addEventListener('DOMContentLoaded', () => {
             const coverPage = document.getElementById('cover-page');
@@ -246,11 +245,11 @@
                 adminPanel.classList.add('hidden');
                 adminToggleButton.classList.add('hidden');
 
-                // Load invitation settings from Firebase
-                const invitationRef = invitationsRef.child(uniqueCodeParam);
-                invitationRef.once('value', (snapshot) => {
-                    const data = snapshot.val();
-                    if (data) {
+                // Load invitation settings from Firestore
+                const invitationDocRef = doc(db, 'invitations', uniqueCodeParam);
+                getDoc(invitationDocRef).then((docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
                         guestNameDisplay.textContent = data.to;
                         applySettings(data.settings);
                         musicToggleButton.classList.remove('hidden');
@@ -258,15 +257,18 @@
                         guestNameDisplay.textContent = 'Tamu Undangan';
                         showCustomAlert('Undangan tidak ditemukan atau tautan rusak.');
                     }
+                }).catch(error => {
+                    showCustomAlert('Gagal mengambil data undangan: ' + error.message);
+                    console.error('Error fetching invitation:', error);
                 });
 
-                // Load wishes from Firebase for this specific invitation
-                wishesRef.orderByChild('invitationId').equalTo(uniqueCodeParam).on('value', (snapshot) => {
-                    const wishesData = snapshot.val();
-                    wishesList.innerHTML = ''; // Clear the list
-                    if (wishesData) {
-                        const wishesArray = Object.values(wishesData);
-                        wishesArray.forEach(wish => {
+                // Real-time listener for wishes from Firestore
+                const wishesQuery = query(collection(db, 'wishes'), where('invitationId', '==', uniqueCodeParam));
+                onSnapshot(wishesQuery, (querySnapshot) => {
+                    wishesList.innerHTML = '';
+                    if (!querySnapshot.empty) {
+                        querySnapshot.forEach((doc) => {
+                            const wish = doc.data();
                             const li = document.createElement('li');
                             li.className = 'border-b last:border-b-0 py-2';
                             li.innerHTML = `<span class="font-bold">${wish.name}:</span> ${wish.wish}`;
@@ -275,6 +277,9 @@
                     } else {
                         wishesList.innerHTML = '<li>Belum ada ucapan.</li>';
                     }
+                }, (error) => {
+                    console.error('Error listening to wishes:', error);
+                    // Handle real-time errors if needed
                 });
 
             } else {
@@ -313,14 +318,14 @@
             });
 
             // Generate Link Button functionality
-            generateLinkBtn.addEventListener('click', () => {
+            generateLinkBtn.addEventListener('click', async () => {
                 const guestName = guestNameInput.value.trim();
                 if (!guestName) {
                     showCustomAlert('Silakan masukkan nama tamu terlebih dahulu.');
                     return;
                 }
 
-                // Generate a short, random unique code
+                // Generate a short, random unique code for Firestore doc ID
                 const uniqueCode = Math.random().toString(36).substring(2, 8);
                 const currentSelections = {
                     font: fontSelect.value,
@@ -329,11 +334,13 @@
                     effect: effectSelect.value
                 };
 
-                // Save data to Firebase
-                invitationsRef.child(uniqueCode).set({
-                    to: guestName,
-                    settings: currentSelections
-                }).then(() => {
+                // Save data to Firestore
+                try {
+                    await setDoc(doc(db, 'invitations', uniqueCode), {
+                        to: guestName,
+                        settings: currentSelections
+                    });
+
                     const baseUrl = window.location.href.split('?')[0];
                     const guestUrl = `${baseUrl}?id=${uniqueCode}`;
                     
@@ -342,9 +349,10 @@
                     whatsappOutput.value = template;
                     
                     outputArea.classList.remove('hidden');
-                }).catch(error => {
-                    showCustomAlert('Gagal menyimpan data ke Firebase: ' + error.message);
-                });
+                } catch (error) {
+                    showCustomAlert('Gagal menyimpan data ke Firestore: ' + error.message);
+                    console.error('Error saving data:', error);
+                }
             });
 
             copyLinkBtn.addEventListener('click', () => copyToClipboard(guestLinkOutput.value, copyLinkBtn));
@@ -369,7 +377,7 @@
             });
 
             // Wishes form submission
-            wishesForm.addEventListener('submit', (e) => {
+            wishesForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const wishesName = wishesNameInput.value.trim();
                 const wishesText = wishesTextInput.value.trim();
@@ -378,18 +386,24 @@
                     return;
                 }
                 const uniqueCodeParam = urlParams.get('id');
-
-                wishesRef.push({
-                    invitationId: uniqueCodeParam,
-                    name: wishesName,
-                    wish: wishesText,
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
-                }).then(() => {
+                
+                try {
+                    if (!uniqueCodeParam) {
+                        showCustomAlert('Tidak dapat mengirim ucapan. Undangan tidak ditemukan.');
+                        return;
+                    }
+                    await addDoc(collection(db, 'wishes'), {
+                        invitationId: uniqueCodeParam,
+                        name: wishesName,
+                        wish: wishesText,
+                        timestamp: new Date()
+                    });
                     showCustomAlert('Terima kasih! Ucapan Anda telah terkirim.');
                     wishesForm.reset();
-                }).catch(error => {
+                } catch (error) {
                     showCustomAlert('Gagal mengirim ucapan: ' + error.message);
-                });
+                    console.error('Error sending wish:', error);
+                }
             });
         });
     </script>
