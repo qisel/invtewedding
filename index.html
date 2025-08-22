@@ -47,15 +47,19 @@
     <div id="effect-container" class="effect-container hidden"></div>
 
     <!-- Cover Page -->
-    <div id="cover-page" class="relative h-screen w-screen bg-cover bg-center flex flex-col justify-center items-center text-white p-4" style="background-image: url('https://images.pexels.com/photos/6146276/pexels-photo-6146276.jpeg');">
-        <div class="bg-black bg-opacity-50 p-6 rounded-lg text-center shadow-2xl">
-            <p class="text-base md:text-lg mb-1">The Wedding Of</p>
-            <h1 class="font-heading text-5xl md:text-7xl mb-2">Rizky & Anisa</h1>
-            <p class="text-base md:text-lg mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
-            <p id="guest-name" class="text-xl font-bold">Tamu Undangan</p>
-            <button id="open-invitation-btn" class="bg-white text-gray-800 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition duration-300 mt-6 text-sm">
-                Buka Undangan
-            </button>
+    <!-- Changed flexbox alignment to allow text position control -->
+    <div id="cover-page" class="relative h-screen w-screen bg-cover bg-center flex flex-col justify-start items-center text-white p-4" style="background-image: url('https://images.pexels.com/photos/6146276/pexels-photo-6146276.jpeg');">
+        <!-- Added a new ID for the text container to control its position -->
+        <div id="cover-text-container" class="absolute w-full flex justify-center items-center h-full">
+            <div class="bg-black bg-opacity-50 p-6 rounded-lg text-center shadow-2xl">
+                <p class="text-base md:text-lg mb-1">The Wedding Of</p>
+                <h1 class="font-heading text-5xl md:text-7xl mb-2">Rizky & Anisa</h1>
+                <p class="text-base md:text-lg mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
+                <p id="guest-name" class="text-xl font-bold">Tamu Undangan</p>
+                <button id="open-invitation-btn" class="bg-white text-gray-800 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition duration-300 mt-6 text-sm">
+                    Buka Undangan
+                </button>
+            </div>
         </div>
     </div>
     
@@ -117,10 +121,11 @@
                 <label class="font-medium text-gray-700">Latar Sampul</label>
                 <input type="url" id="bg-url-input" class="flex-grow p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70 text-xs" placeholder="Link Foto">
             </div>
-            <!-- Background Position Slider -->
+            <!-- Text Position Slider -->
             <div class="flex items-center justify-between gap-1">
                 <label class="font-medium text-gray-700">Posisi Teks</label>
-                <input type="range" id="bg-position-slider" class="flex-grow" min="0" max="100" value="50" step="1">
+                <!-- Renamed slider to be more accurate -->
+                <input type="range" id="text-position-slider" class="flex-grow" min="0" max="100" value="50" step="1">
             </div>
             <!-- Music Select -->
             <div class="flex items-center justify-between gap-1">
@@ -209,6 +214,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const coverPage = document.getElementById('cover-page');
+            const coverTextContainer = document.getElementById('cover-text-container');
             const mainContent = document.getElementById('main-content');
             const openInvitationBtn = document.getElementById('open-invitation-btn');
             const backgroundMusic = document.getElementById('background-music');
@@ -234,10 +240,9 @@
             const copyLinkBtn = document.getElementById('copy-link-btn');
             const copyTemplateBtn = document.getElementById('copy-template-btn');
             
-            // NEW: Background controls
+            // Background and Text Position Controls
             const bgUrlInput = document.getElementById('bg-url-input');
-            const bgPositionSlider = document.getElementById('bg-position-slider');
-            // Update the default image URL with the user-provided one
+            const textPositionSlider = document.getElementById('text-position-slider');
             const defaultCoverImage = 'https://images.pexels.com/photos/6146276/pexels-photo-6146276.jpeg';
 
             // Modal elements
@@ -298,13 +303,19 @@
                 document.documentElement.style.setProperty('--heading-font', settings.font);
                 document.documentElement.style.setProperty('--cover-font-color', settings.color);
                 
-                // NEW: Apply background URL and position
                 const bgUrl = settings.bgUrl || defaultCoverImage;
-                const bgPosition = settings.bgPosition ? `center ${settings.bgPosition}%` : 'center';
-                
                 coverPage.style.backgroundImage = `url('${bgUrl}')`;
-                coverPage.style.backgroundPosition = bgPosition;
                 
+                // NEW: Apply text position from settings
+                if (settings.textPosition) {
+                    coverTextContainer.style.top = `${settings.textPosition}%`;
+                    coverTextContainer.style.transform = `translateY(-${settings.textPosition}%)`;
+                } else {
+                    // Default to 50% for centering
+                    coverTextContainer.style.top = '50%';
+                    coverTextContainer.style.transform = 'translateY(-50%)';
+                }
+
                 if (backgroundMusic.src !== settings.music) {
                     backgroundMusic.src = settings.music;
                     backgroundMusic.load();
@@ -444,7 +455,7 @@
                 applyEffect(effectSelect.value);
             });
             
-            // NEW: Live preview for background URL
+            // Live preview for background URL
             bgUrlInput.addEventListener('input', () => {
                 const url = bgUrlInput.value.trim();
                 if (url) {
@@ -454,9 +465,11 @@
                 }
             });
 
-            // NEW: Live preview for background position
-            bgPositionSlider.addEventListener('input', () => {
-                coverPage.style.backgroundPosition = `center ${bgPositionSlider.value}%`;
+            // NEW: Live preview for text position
+            textPositionSlider.addEventListener('input', () => {
+                const value = textPositionSlider.value;
+                coverTextContainer.style.top = `${value}%`;
+                coverTextContainer.style.transform = `translateY(-${value}%)`;
             });
 
             // Generate Link Button functionality
@@ -474,9 +487,9 @@
                     color: fontColorInput.value,
                     music: musicSelect.value,
                     effect: effectSelect.value,
-                    // NEW: Save background URL and position
                     bgUrl: bgUrlInput.value.trim(),
-                    bgPosition: bgPositionSlider.value
+                    // NEW: Save text position
+                    textPosition: textPositionSlider.value
                 };
 
                 // Save data to Firestore
