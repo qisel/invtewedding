@@ -47,7 +47,7 @@
     <div id="effect-container" class="effect-container hidden"></div>
 
     <!-- Cover Page -->
-    <div id="cover-page" class="relative h-screen w-screen bg-cover bg-center flex flex-col justify-center items-center text-white p-4" style="background-image: url('https://images.unsplash.com/photo-1523438885262-a2d3a1752a2?q=80&w=1887&auto=format&fit=crop');">
+    <div id="cover-page" class="relative h-screen w-screen bg-cover bg-center flex flex-col justify-center items-center text-white p-4" style="background-image: url('https://images.pexels.com/photos/6146276/pexels-photo-6146276.jpeg');">
         <div class="bg-black bg-opacity-50 p-6 rounded-lg text-center shadow-2xl">
             <p class="text-base md:text-lg mb-1">The Wedding Of</p>
             <h1 class="font-heading text-5xl md:text-7xl mb-2">Rizky & Anisa</h1>
@@ -111,6 +111,16 @@
             <div class="flex items-center justify-between gap-1">
                 <label class="font-medium text-gray-700">Warna Teks</label>
                 <input type="color" id="font-color" value="#FFFFFF" class="flex-grow h-6 border border-gray-300 rounded-md bg-white/70">
+            </div>
+            <!-- Background Image URL Input -->
+            <div class="flex items-center justify-between gap-1">
+                <label class="font-medium text-gray-700">Latar Sampul</label>
+                <input type="url" id="bg-url-input" class="flex-grow p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70 text-xs" placeholder="Link Foto">
+            </div>
+            <!-- Background Position Slider -->
+            <div class="flex items-center justify-between gap-1">
+                <label class="font-medium text-gray-700">Posisi Teks</label>
+                <input type="range" id="bg-position-slider" class="flex-grow" min="0" max="100" value="50" step="1">
             </div>
             <!-- Music Select -->
             <div class="flex items-center justify-between gap-1">
@@ -223,6 +233,12 @@
             const whatsappOutput = document.getElementById('whatsapp-output');
             const copyLinkBtn = document.getElementById('copy-link-btn');
             const copyTemplateBtn = document.getElementById('copy-template-btn');
+            
+            // NEW: Background controls
+            const bgUrlInput = document.getElementById('bg-url-input');
+            const bgPositionSlider = document.getElementById('bg-position-slider');
+            // Update the default image URL with the user-provided one
+            const defaultCoverImage = 'https://images.pexels.com/photos/6146276/pexels-photo-6146276.jpeg';
 
             // Modal elements
             const alertModal = document.getElementById('alert-modal');
@@ -277,9 +293,18 @@
                 }
             }
 
+            // Function to apply settings from Firestore data or live preview
             function applySettings(settings) {
                 document.documentElement.style.setProperty('--heading-font', settings.font);
                 document.documentElement.style.setProperty('--cover-font-color', settings.color);
+                
+                // NEW: Apply background URL and position
+                const bgUrl = settings.bgUrl || defaultCoverImage;
+                const bgPosition = settings.bgPosition ? `center ${settings.bgPosition}%` : 'center';
+                
+                coverPage.style.backgroundImage = `url('${bgUrl}')`;
+                coverPage.style.backgroundPosition = bgPosition;
+                
                 if (backgroundMusic.src !== settings.music) {
                     backgroundMusic.src = settings.music;
                     backgroundMusic.load();
@@ -418,6 +443,21 @@
             effectSelect.addEventListener('change', () => {
                 applyEffect(effectSelect.value);
             });
+            
+            // NEW: Live preview for background URL
+            bgUrlInput.addEventListener('input', () => {
+                const url = bgUrlInput.value.trim();
+                if (url) {
+                    coverPage.style.backgroundImage = `url('${url}')`;
+                } else {
+                    coverPage.style.backgroundImage = `url('${defaultCoverImage}')`;
+                }
+            });
+
+            // NEW: Live preview for background position
+            bgPositionSlider.addEventListener('input', () => {
+                coverPage.style.backgroundPosition = `center ${bgPositionSlider.value}%`;
+            });
 
             // Generate Link Button functionality
             generateLinkBtn.addEventListener('click', async () => {
@@ -433,7 +473,10 @@
                     font: fontSelect.value,
                     color: fontColorInput.value,
                     music: musicSelect.value,
-                    effect: effectSelect.value
+                    effect: effectSelect.value,
+                    // NEW: Save background URL and position
+                    bgUrl: bgUrlInput.value.trim(),
+                    bgPosition: bgPositionSlider.value
                 };
 
                 // Save data to Firestore
