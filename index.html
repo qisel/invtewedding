@@ -46,13 +46,20 @@
 
     <div id="effect-container" class="effect-container hidden"></div>
 
-    <!-- Cover Page - REMOVED justify-start items-center to allow absolute positioning of child -->
+    <!-- Cover Page -->
     <div id="cover-page" class="relative h-screen w-screen bg-cover bg-center flex flex-col p-4" style="background-image: url('https://images.pexels.com/photos/6146276/pexels-photo-6146276.jpeg');">
-        <!-- Text container is now absolutely positioned for smooth movement -->
-        <div id="cover-text-container" class="absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <div class="bg-black bg-opacity-50 p-6 rounded-lg text-center shadow-2xl">
+        
+        <!-- TOP TEXT CONTAINER -->
+        <div id="top-text-container" class="absolute text-white text-center" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="bg-black bg-opacity-50 p-6 rounded-lg shadow-2xl">
                 <p class="text-base md:text-lg mb-1">The Wedding Of</p>
-                <h1 class="font-heading text-5xl md:text-7xl mb-2">Rizky & Anisa</h1>
+                <h1 class="font-heading text-5xl md:text-7xl">Rizky & Anisa</h1>
+            </div>
+        </div>
+
+        <!-- BOTTOM TEXT CONTAINER -->
+        <div id="bottom-text-container" class="absolute text-white text-center" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="bg-black bg-opacity-50 p-6 rounded-lg shadow-2xl">
                 <p class="text-base md:text-lg mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
                 <p id="guest-name" class="text-xl font-bold">Tamu Undangan</p>
                 <button id="open-invitation-btn" class="bg-white text-gray-800 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition duration-300 mt-6 text-sm">
@@ -60,6 +67,7 @@
                 </button>
             </div>
         </div>
+
     </div>
     
     <!-- Admin and Back buttons now positioned better and initially hidden -->
@@ -120,16 +128,29 @@
                 <label class="font-medium text-gray-700">Latar Sampul</label>
                 <input type="url" id="bg-url-input" class="flex-grow p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70 text-xs" placeholder="Link Foto">
             </div>
-            <!-- NEW: Horizontal Text Position Slider -->
+            <hr class="my-1 border-gray-300">
+            <!-- Posisi Teks Atas -->
+            <label class="font-bold text-gray-800">Posisi Teks Atas</label>
             <div class="flex items-center justify-between gap-1">
-                <label class="font-medium text-gray-700">Posisi Horizontal</label>
-                <input type="range" id="text-position-x-slider" class="flex-grow" min="0" max="100" value="50" step="1">
+                <label class="font-medium text-gray-700">Horizontal</label>
+                <input type="range" id="text-position-x-top-slider" class="flex-grow" min="0" max="100" value="50" step="1">
             </div>
-            <!-- NEW: Vertical Text Position Slider -->
             <div class="flex items-center justify-between gap-1">
-                <label class="font-medium text-gray-700">Posisi Vertikal</label>
-                <input type="range" id="text-position-y-slider" class="flex-grow" min="0" max="100" value="50" step="1">
+                <label class="font-medium text-gray-700">Vertikal</label>
+                <input type="range" id="text-position-y-top-slider" class="flex-grow" min="0" max="100" value="35" step="1">
             </div>
+            <hr class="my-1 border-gray-300">
+            <!-- Posisi Teks Bawah -->
+            <label class="font-bold text-gray-800">Posisi Teks Bawah</label>
+            <div class="flex items-center justify-between gap-1">
+                <label class="font-medium text-gray-700">Horizontal</label>
+                <input type="range" id="text-position-x-bottom-slider" class="flex-grow" min="0" max="100" value="50" step="1">
+            </div>
+            <div class="flex items-center justify-between gap-1">
+                <label class="font-medium text-gray-700">Vertikal</label>
+                <input type="range" id="text-position-y-bottom-slider" class="flex-grow" min="0" max="100" value="65" step="1">
+            </div>
+            <hr class="my-1 border-gray-300">
             <!-- Music Select -->
             <div class="flex items-center justify-between gap-1">
                 <label class="font-medium text-gray-700">Musik Latar</label>
@@ -217,7 +238,8 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const coverPage = document.getElementById('cover-page');
-            const coverTextContainer = document.getElementById('cover-text-container');
+            const topTextContainer = document.getElementById('top-text-container');
+            const bottomTextContainer = document.getElementById('bottom-text-container');
             const mainContent = document.getElementById('main-content');
             const openInvitationBtn = document.getElementById('open-invitation-btn');
             const backgroundMusic = document.getElementById('background-music');
@@ -245,8 +267,10 @@
             
             // Background and Text Position Controls
             const bgUrlInput = document.getElementById('bg-url-input');
-            const textPositionXSlider = document.getElementById('text-position-x-slider');
-            const textPositionYSlider = document.getElementById('text-position-y-slider');
+            const textPositionXTopSlider = document.getElementById('text-position-x-top-slider');
+            const textPositionYTopSlider = document.getElementById('text-position-y-top-slider');
+            const textPositionXBottomSlider = document.getElementById('text-position-x-bottom-slider');
+            const textPositionYBottomSlider = document.getElementById('text-position-y-bottom-slider');
             const defaultCoverImage = 'https://images.pexels.com/photos/6146276/pexels-photo-6146276.jpeg';
 
             // Modal elements
@@ -310,16 +334,25 @@
                 const bgUrl = settings.bgUrl || defaultCoverImage;
                 coverPage.style.backgroundImage = `url('${bgUrl}')`;
                 
-                // NEW: Apply text position from settings
-                if (settings.textPositionX && settings.textPositionY) {
-                    coverTextContainer.style.top = `${settings.textPositionY}%`;
-                    coverTextContainer.style.left = `${settings.textPositionX}%`;
-                    coverTextContainer.style.transform = `translate(-${settings.textPositionX}%, -${settings.textPositionY}%)`;
+                // NEW: Apply positions for both text containers
+                if (settings.textPositionXTop && settings.textPositionYTop) {
+                    topTextContainer.style.top = `${settings.textPositionYTop}%`;
+                    topTextContainer.style.left = `${settings.textPositionXTop}%`;
+                    topTextContainer.style.transform = `translate(-${settings.textPositionXTop}%, -${settings.textPositionYTop}%)`;
                 } else {
-                    // Default to 50% for centering
-                    coverTextContainer.style.top = '50%';
-                    coverTextContainer.style.left = '50%';
-                    coverTextContainer.style.transform = 'translate(-50%, -50%)';
+                    topTextContainer.style.top = '35%';
+                    topTextContainer.style.left = '50%';
+                    topTextContainer.style.transform = 'translate(-50%, -35%)';
+                }
+                
+                if (settings.textPositionXBottom && settings.textPositionYBottom) {
+                    bottomTextContainer.style.top = `${settings.textPositionYBottom}%`;
+                    bottomTextContainer.style.left = `${settings.textPositionXBottom}%`;
+                    bottomTextContainer.style.transform = `translate(-${settings.textPositionXBottom}%, -${settings.textPositionYBottom}%)`;
+                } else {
+                    bottomTextContainer.style.top = '65%';
+                    bottomTextContainer.style.left = '50%';
+                    bottomTextContainer.style.transform = 'translate(-50%, -65%)';
                 }
 
                 if (backgroundMusic.src !== settings.music) {
@@ -471,18 +504,32 @@
                 }
             });
 
-            // Live preview for both horizontal and vertical text position
-            textPositionXSlider.addEventListener('input', () => {
-                const xValue = textPositionXSlider.value;
-                const yValue = textPositionYSlider.value;
-                coverTextContainer.style.left = `${xValue}%`;
-                coverTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
+            // Live preview for top text position
+            textPositionXTopSlider.addEventListener('input', () => {
+                const xValue = textPositionXTopSlider.value;
+                const yValue = textPositionYTopSlider.value;
+                topTextContainer.style.left = `${xValue}%`;
+                topTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
             });
-            textPositionYSlider.addEventListener('input', () => {
-                const xValue = textPositionXSlider.value;
-                const yValue = textPositionYSlider.value;
-                coverTextContainer.style.top = `${yValue}%`;
-                coverTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
+            textPositionYTopSlider.addEventListener('input', () => {
+                const xValue = textPositionXTopSlider.value;
+                const yValue = textPositionYTopSlider.value;
+                topTextContainer.style.top = `${yValue}%`;
+                topTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
+            });
+            
+            // Live preview for bottom text position
+            textPositionXBottomSlider.addEventListener('input', () => {
+                const xValue = textPositionXBottomSlider.value;
+                const yValue = textPositionYBottomSlider.value;
+                bottomTextContainer.style.left = `${xValue}%`;
+                bottomTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
+            });
+            textPositionYBottomSlider.addEventListener('input', () => {
+                const xValue = textPositionXBottomSlider.value;
+                const yValue = textPositionYBottomSlider.value;
+                bottomTextContainer.style.top = `${yValue}%`;
+                bottomTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
             });
 
             // Generate Link Button functionality
@@ -501,9 +548,11 @@
                     music: musicSelect.value,
                     effect: effectSelect.value,
                     bgUrl: bgUrlInput.value.trim(),
-                    // Save both horizontal and vertical text position
-                    textPositionX: textPositionXSlider.value,
-                    textPositionY: textPositionYSlider.value
+                    // Save all four slider values
+                    textPositionXTop: textPositionXTopSlider.value,
+                    textPositionYTop: textPositionYTopSlider.value,
+                    textPositionXBottom: textPositionXBottomSlider.value,
+                    textPositionYBottom: textPositionYBottomSlider.value
                 };
 
                 // Save data to Firestore
