@@ -46,13 +46,13 @@
 
     <div id="effect-container" class="effect-container hidden"></div>
 
-    <!-- Cover Page -->
-    <div id="cover-page" class="relative h-screen w-screen bg-cover bg-center flex flex-col p-4" style="background-image: url('https://images.pexels.com/photos/6146276/pexels-photo-6146276.jpeg');">
+    <!-- Cover Page - REMOVED 'p-4' padding to allow text to reach the screen edges -->
+    <div id="cover-page" class="relative h-screen w-screen bg-cover bg-center flex flex-col" style="background-image: url('https://images.pexels.com/photos/6146276/pexels-photo-6146276.jpeg');">
         
         <!-- TOP TEXT CONTAINER -->
         <div id="top-text-container" class="absolute text-white text-center" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <!-- No background here -->
-            <div>
+            <!-- PADDING IS NOW ON THIS INNER DIV -->
+            <div class="p-4">
                 <p class="text-base md:text-lg mb-1">The Wedding Of</p>
                 <!-- NEW: Added unique ID to h1 for individual scaling -->
                 <h1 id="couple-name-h1" class="font-heading text-5xl md:text-7xl">Rizky & Anisa</h1>
@@ -60,8 +60,8 @@
         </div>
 
         <!-- BOTTOM TEXT CONTAINER -->
-        <!-- Added bg-black bg-opacity-50 back to this container only -->
         <div id="bottom-text-container" class="absolute text-white text-center" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <!-- PADDING IS NOW ON THIS INNER DIV -->
             <div class="bg-black bg-opacity-50 p-6 rounded-lg shadow-2xl">
                 <p class="text-base md:text-lg mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
                 <p id="guest-name" class="text-xl font-bold">Tamu Undangan</p>
@@ -343,7 +343,7 @@
                 const bgUrl = settings.bgUrl || defaultCoverImage;
                 coverPage.style.backgroundImage = `url('${bgUrl}')`;
                 
-                // NEW: Apply text position from settings
+                // Apply text position from settings
                 if (settings.textPositionXTop && settings.textPositionYTop) {
                     topTextContainer.style.top = `${settings.textPositionYTop}%`;
                     topTextContainer.style.left = `${settings.textPositionXTop}%`;
@@ -364,7 +364,7 @@
                     bottomTextContainer.style.transform = 'translate(-50%, -65%)';
                 }
 
-                // NEW: Apply zoom only to the couple's name
+                // Apply zoom only to the couple's name
                 if (settings.zoom) {
                     coupleNameH1.style.transform = `scale(${settings.zoom})`;
                 } else {
@@ -531,12 +531,14 @@
                 const xValue = textPositionXTopSlider.value;
                 const yValue = textPositionYTopSlider.value;
                 topTextContainer.style.left = `${xValue}%`;
+                // UPDATE: The transform needs to adjust based on new position
                 topTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
             });
             textPositionYTopSlider.addEventListener('input', () => {
                 const xValue = textPositionXTopSlider.value;
                 const yValue = textPositionYTopSlider.value;
                 topTextContainer.style.top = `${yValue}%`;
+                // UPDATE: The transform needs to adjust based on new position
                 topTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
             });
             
@@ -545,12 +547,14 @@
                 const xValue = textPositionXBottomSlider.value;
                 const yValue = textPositionYBottomSlider.value;
                 bottomTextContainer.style.left = `${xValue}%`;
+                // UPDATE: The transform needs to adjust based on new position
                 bottomTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
             });
             textPositionYBottomSlider.addEventListener('input', () => {
                 const xValue = textPositionXBottomSlider.value;
                 const yValue = textPositionYBottomSlider.value;
                 bottomTextContainer.style.top = `${yValue}%`;
+                // UPDATE: The transform needs to adjust based on new position
                 bottomTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
             });
 
