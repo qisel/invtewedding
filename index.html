@@ -47,52 +47,120 @@
     <div id="effect-container" class="effect-container hidden"></div>
 
     <!-- Cover Page -->
-    <div id="cover-page" class="relative h-screen w-screen bg-cover bg-center flex flex-col justify-center items-center text-white p-4" style="background-image: url('https://images.unsplash.com/photo-1523438885262-a52d3a1752a2?q=80&w=1887&auto=format&fit=crop');">
-        <div class="bg-black bg-opacity-50 p-8 rounded-lg text-center shadow-2xl">
-            <p class="text-lg md:text-xl mb-2">The Wedding Of</p>
-            <h1 class="font-heading text-6xl md:text-8xl mb-4">Rizky & Anisa</h1>
-            <p class="text-lg md:text-xl mb-4">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
-            <p id="guest-name" class="text-2xl font-bold">Tamu Undangan</p>
-            <button id="open-invitation-btn" class="bg-white text-gray-800 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition duration-300 mt-8">
+    <div id="cover-page" class="relative h-screen w-screen bg-cover bg-center flex flex-col justify-center items-center text-white p-4" style="background-image: url('https://images.unsplash.com/photo-1523438885262-a2d3a1752a2?q=80&w=1887&auto=format&fit=crop');">
+        <div class="bg-black bg-opacity-50 p-6 rounded-lg text-center shadow-2xl">
+            <p class="text-base md:text-lg mb-1">The Wedding Of</p>
+            <h1 class="font-heading text-5xl md:text-7xl mb-2">Rizky & Anisa</h1>
+            <p class="text-base md:text-lg mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
+            <p id="guest-name" class="text-xl font-bold">Tamu Undangan</p>
+            <button id="open-invitation-btn" class="bg-white text-gray-800 font-bold py-2.5 px-6 rounded-full hover:bg-gray-200 transition duration-300 mt-6 text-sm">
                 Buka Undangan
             </button>
         </div>
     </div>
     
-    <!-- Admin button now positioned better and initially hidden -->
+    <!-- Admin and Back buttons now positioned better and initially hidden -->
+    <button id="back-to-cover-btn" class="hidden fixed bottom-16 right-4 bg-blue-600 text-white rounded-full p-2.5 shadow-lg z-50">
+        <!-- Home icon for back button -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    </button>
     <button id="admin-toggle-btn" class="hidden fixed bottom-4 right-4 bg-blue-600 text-white rounded-full p-2.5 shadow-lg z-50">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
     </button>
 
     <!-- Main Content -->
     <div id="main-content" class="hidden scroll-container">
-        <section class="scroll-section bg-stone-100"><div class="text-center max-w-2xl"><h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Assalamu'alaikum</h2><p class="text-lg mb-4">Maha suci Allah yang telah menciptakan makhluk-Nya berpasang-pasangan. Ya Allah, perkenankanlah kami merangkai kasih dalam ikatan pernikahan.</p><p class="font-bold text-xl">Rizky & Anisa</p></div></section>
-        <section class="scroll-section bg-stone-50"><div class="text-center max-w-4xl"><h2 class="font-heading text-5xl md:text-7xl mb-8 text-amber-800">Mempelai</h2><div class="flex flex-col md:flex-row gap-8 items-center"><div class="w-full md:w-1/2"><img src="https://placehold.co/300x300/e2e8f0/333?text=Rizky" alt="Foto Rizky" class="w-48 h-48 mx-auto rounded-full object-cover shadow-lg mb-4"><h3 class="font-heading text-4xl text-amber-900">Rizky Pratama</h3><p class="mt-2 text-gray-600">Putra dari Bapak John Doe & Ibu Jane Doe</p></div><div class="w-full md:w-1/2"><img src="https://placehold.co/300x300/e2e8f0/333?text=Anisa" alt="Foto Anisa" class="w-48 h-48 mx-auto rounded-full object-cover shadow-lg mb-4"><h3 class="font-heading text-4xl text-amber-900">Anisa Rahmawati</h3><p class="mt-2 text-gray-600">Putri dari Bapak Michael Smith & Ibu Sarah Smith</p></div></div></div></section>
-        <section class="scroll-section bg-stone-100"><div class="text-center max-w-2xl"><h2 class="font-heading text-5xl md:text-7xl mb-4 text-amber-800">Doa & Harapan</h2><p class="text-lg italic">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir."</p><p class="font-bold mt-4">(QS. Ar-Rum: 21)</p></div></section>
+        <section class="scroll-section bg-stone-100"><div class="text-center max-w-2xl"><h2 class="font-heading text-4xl md:text-6xl mb-2 text-amber-800">Assalamu'alaikum</h2><p class="text-base mb-2">Maha suci Allah yang telah menciptakan makhluk-Nya berpasang-pasangan. Ya Allah, perkenankanlah kami merangkai kasih dalam ikatan pernikahan.</p><p class="font-bold text-lg">Rizky & Anisa</p></div></section>
+        <section class="scroll-section bg-stone-50"><div class="text-center max-w-4xl"><h2 class="font-heading text-4xl md:text-6xl mb-6 text-amber-800">Mempelai</h2><div class="flex flex-col md:flex-row gap-4 items-center"><div class="w-full md:w-1/2"><img src="https://placehold.co/300x300/e2e8f0/333?text=Rizky" alt="Foto Rizky" class="w-40 h-40 mx-auto rounded-full object-cover shadow-lg mb-2"><h3 class="font-heading text-3xl text-amber-900">Rizky Pratama</h3><p class="mt-1 text-gray-600">Putra dari Bapak John Doe & Ibu Jane Doe</p></div><div class="w-full md:w-1/2"><img src="https://placehold.co/300x300/e2e8f0/333?text=Anisa" alt="Foto Anisa" class="w-40 h-40 mx-auto rounded-full object-cover shadow-lg mb-2"><h3 class="font-heading text-3xl text-amber-900">Anisa Rahmawati</h3><p class="mt-1 text-gray-600">Putri dari Bapak Michael Smith & Ibu Sarah Smith</p></div></div></div></section>
+        <section class="scroll-section bg-stone-100"><div class="text-center max-w-2xl"><h2 class="font-heading text-4xl md:text-6xl mb-2 text-amber-800">Doa & Harapan</h2><p class="text-base italic">"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir."</p><p class="font-bold mt-2">(QS. Ar-Rum: 21)</p></div></section>
     </div>
 
     <!-- Admin Panel -->
-    <div id="admin-panel" class="hidden fixed bottom-4 right-4 bg-white/30 backdrop-blur-sm p-4 rounded-3xl shadow-2xl w-11/12 md:w-1/4 h-1/2 z-50 border border-gray-200 transform transition-transform duration-300 ease-in-out">
+    <div id="admin-panel" class="hidden fixed bottom-4 right-4 bg-white/70 backdrop-blur-md p-4 rounded-3xl shadow-2xl w-80 z-50 transform transition-transform duration-300 ease-in-out">
         <div class="flex justify-between items-center mb-2">
-            <h3 class="font-bold text-xs text-gray-800">Panel Admin</h3>
+            <h3 class="font-bold text-sm text-gray-800">Panel Admin</h3>
             <button id="close-admin-panel" class="text-gray-500 hover:bg-gray-200/50 p-1 rounded-full focus:outline-none transition duration-150">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
-        <div class="space-y-2 text-xs overflow-y-auto max-h-[calc(100%-120px)]">
-            <div><label class="block font-medium text-gray-700 mb-1">Nama Tamu</label><input type="text" id="guest-name-input" class="w-full p-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70" placeholder="Contoh: John Doe"></div>
-            <div><label class="block font-medium text-gray-700 mb-1">Jenis Huruf Judul</label><select id="font-select" class="w-full p-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70"><option value="'Great Vibes', cursive" style="font-family: 'Great Vibes', cursive;">Great Vibes</option><option value="'Dancing Script', cursive" style="font-family: 'Dancing Script', cursive;">Dancing Script</option><option value="'Playfair Display', serif" style="font-family: 'Playfair Display', serif;">Playfair Display</option><option value="'Pacifico', cursive" style="font-family: 'Pacifico', cursive;">Pacifico</option><option value="'Caveat', cursive" style="font-family: 'Caveat', cursive;">Caveat</option><option value="'Lobster', cursive" style="font-family: 'Lobster', cursive;">Lobster</option><option value="'Sacramento', cursive" style="font-family: 'Sacramento', cursive;">Sacramento</option><option value="'Merriweather', serif" style="font-family: 'Merriweather', serif;">Merriweather</option><option value="'Lato', sans-serif" style="font-family: 'Lato', sans-serif;">Lato</option><option value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto</option></select></div>
-            <div><label class="block font-medium text-gray-700 mb-1">Warna Teks Sampul</label><input type="color" id="font-color" value="#FFFFFF" class="w-full h-8 border border-gray-300 rounded-md bg-white/70"></div>
-            <div><label class="block font-medium text-gray-700 mb-1">Musik Latar</label><div class="flex items-center gap-2"><select id="music-select" class="w-full p-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70"><option value="https://files.catbox.moe/q9vol9.mp3">Music 1</option><option value="https://files.catbox.moe/dqrd8a.mp3">Music 2</option><option value="https://files.catbox.moe/q4p716.mp3">Music 3</option></select><button id="preview-music-btn" class="p-1.5 border border-gray-300 rounded-md bg-gray-200/70 hover:bg-gray-300/70 transition duration-150"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button></div></div>
-            <div><label class="block font-medium text-gray-700 mb-1">Efek Latar</label><select id="effect-select" class="w-full p-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70"><option value="none">Tidak Ada</option><option value="petals">Kelopak Bunga</option><option value="snow">Salju</option><option value="confetti">Konfeti</option><option value="hearts">Hati Jatuh</option><option value="bubbles">Gelembung</option><option value="stars">Bintang Berkelip</option></select></div>
+        <div class="space-y-2 text-xs">
+            <!-- Guest Name Input -->
+            <div class="flex items-center justify-between gap-2">
+                <label class="font-medium text-gray-700">Nama Tamu</label>
+                <input type="text" id="guest-name-input" class="flex-grow p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70" placeholder="Contoh: John Doe">
+            </div>
+            <!-- Font Select -->
+            <div class="flex items-center justify-between gap-2">
+                <label class="font-medium text-gray-700">Jenis Huruf Judul</label>
+                <select id="font-select" class="flex-grow p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70 text-xs">
+                    <option value="'Great Vibes', cursive" style="font-family: 'Great Vibes', cursive;">Great Vibes</option>
+                    <option value="'Dancing Script', cursive" style="font-family: 'Dancing Script', cursive;">Dancing Script</option>
+                    <option value="'Playfair Display', serif" style="font-family: 'Playfair Display', serif;">Playfair Display</option>
+                    <option value="'Pacifico', cursive" style="font-family: 'Pacifico', cursive;">Pacifico</option>
+                    <option value="'Caveat', cursive" style="font-family: 'Caveat', cursive;">Caveat</option>
+                    <option value="'Lobster', cursive" style="font-family: 'Lobster', cursive;">Lobster</option>
+                    <option value="'Sacramento', cursive" style="font-family: 'Sacramento', cursive;">Sacramento</option>
+                    <option value="'Merriweather', serif" style="font-family: 'Merriweather', serif;">Merriweather</option>
+                    <option value="'Lato', sans-serif" style="font-family: 'Lato', sans-serif;">Lato</option>
+                    <option value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto</option>
+                </select>
+            </div>
+            <!-- Font Color Input -->
+            <div class="flex items-center justify-between gap-2">
+                <label class="font-medium text-gray-700">Warna Teks Sampul</label>
+                <input type="color" id="font-color" value="#FFFFFF" class="flex-grow h-6 border border-gray-300 rounded-md bg-white/70">
+            </div>
+            <!-- Music Select -->
+            <div class="flex items-center justify-between gap-2">
+                <label class="font-medium text-gray-700">Musik Latar</label>
+                <div class="flex-grow flex items-center gap-1">
+                    <select id="music-select" class="w-full p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70 text-xs">
+                        <option value="https://files.catbox.moe/q9vol9.mp3">Music 1</option>
+                        <option value="https://files.catbox.moe/dqrd8a.mp3">Music 2</option>
+                        <option value="https://files.catbox.moe/q4p716.mp3">Music 3</option>
+                    </select>
+                    <button id="preview-music-btn" class="p-1 border border-gray-300 rounded-md bg-gray-200/70 hover:bg-gray-300/70 transition duration-150">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                    </button>
+                </div>
+            </div>
+            <!-- Effect Select -->
+            <div class="flex items-center justify-between gap-2">
+                <label class="font-medium text-gray-700">Efek Latar</label>
+                <select id="effect-select" class="flex-grow p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70 text-xs">
+                    <option value="none">Tidak Ada</option>
+                    <option value="petals">Kelopak Bunga</option>
+                    <option value="snow">Salju</option>
+                    <option value="confetti">Konfeti</option>
+                    <option value="hearts">Hati Jatuh</option>
+                    <option value="bubbles">Gelembung</option>
+                    <option value="stars">Bintang Berkelip</option>
+                </select>
+            </div>
         </div>
-        <div class="mt-4">
+        <div class="mt-2">
             <button id="generate-link-btn" class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-2 px-4 rounded-full shadow-md hover:from-blue-600 hover:to-indigo-700 transition duration-200 text-xs">Buat Link & Pesan</button>
-            <div id="output-area" class="hidden mt-3 p-2 bg-white/80 rounded-lg border border-dashed border-gray-300 space-y-2">
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Tautan Unik Tamu:</label><div class="flex"><input type="text" id="guest-link-output" class="w-full text-xs p-1.5 border border-gray-300 rounded-l-md bg-gray-100/70" readonly><button id="copy-link-btn" class="bg-gray-200/70 text-gray-700 px-2 rounded-r-md text-xs hover:bg-gray-300/70 transition duration-150">Salin</button></div></div>
-                <div><label class="block text-xs font-medium text-gray-600 mb-1">Templat Pesan WhatsApp:</label><textarea id="whatsapp-output" rows="4" class="w-full text-xs p-1.5 border border-gray-300 rounded-md bg-gray-100/70" readonly></textarea><button id="copy-template-btn" class="w-full mt-1 bg-green-500 text-white py-1 rounded-md text-xs hover:bg-green-600 transition duration-150">Salin Pesan Undangan</button></div>
+            <div id="output-area" class="hidden mt-2 p-2 bg-white/80 rounded-lg border border-dashed border-gray-300 space-y-1">
+                <div class="hidden">
+                    <label class="block text-xs font-medium text-gray-600 mb-0.5">Tautan Unik Tamu:</label>
+                    <input type="text" id="guest-link-output" class="w-full text-xs p-1 border border-gray-300 rounded-md bg-gray-100/70" readonly>
+                </div>
+                <div class="hidden">
+                    <label class="block text-xs font-medium text-gray-600 mb-0.5">Templat Pesan WhatsApp:</label>
+                    <textarea id="whatsapp-output" rows="4" class="w-full text-xs p-1 border border-gray-300 rounded-md bg-gray-100/70" readonly></textarea>
+                </div>
+                <div class="flex justify-center gap-2 mt-1">
+                    <button id="copy-link-btn" class="bg-gray-200/70 text-gray-700 font-medium px-2 py-1 rounded-md text-xs hover:bg-gray-300/70 transition duration-150 flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                        Salin Tautan
+                    </button>
+                    <button id="copy-template-btn" class="bg-green-500 text-white font-medium px-2 py-1 rounded-md text-xs hover:bg-green-600 transition duration-150 flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        Salin Pesan
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -137,6 +205,7 @@
             const musicToggleButton = document.getElementById('music-toggle-btn');
             const adminPanel = document.getElementById('admin-panel');
             const adminToggleButton = document.getElementById('admin-toggle-btn');
+            const backToCoverBtn = document.getElementById('back-to-cover-btn');
             const effectContainer = document.getElementById('effect-container');
             const adminOverlay = document.getElementById('admin-overlay');
             const closeAdminPanelBtn = document.getElementById('close-admin-panel');
@@ -151,8 +220,8 @@
             const generateLinkBtn = document.getElementById('generate-link-btn');
             const outputArea = document.getElementById('output-area');
             const guestLinkOutput = document.getElementById('guest-link-output');
-            const copyLinkBtn = document.getElementById('copy-link-btn');
             const whatsappOutput = document.getElementById('whatsapp-output');
+            const copyLinkBtn = document.getElementById('copy-link-btn');
             const copyTemplateBtn = document.getElementById('copy-template-btn');
 
             // Modal elements
@@ -160,7 +229,6 @@
             const alertMessage = document.getElementById('alert-message');
             const alertCloseBtn = document.getElementById('alert-close-btn');
 
-            let isMusicPlaying = false;
             const previewAudio = new Audio();
             
             const playIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`;
@@ -218,16 +286,23 @@
                 }
                 applyEffect(settings.effect);
             }
+            
+            // Function to update the music button icon based on the audio state
+            function updateMusicButtonIcon() {
+                if (backgroundMusic.paused) {
+                    musicToggleButton.innerHTML = playIcon;
+                } else {
+                    musicToggleButton.innerHTML = pauseIcon;
+                }
+            }
 
             function toggleMusic() {
-                if (isMusicPlaying) { 
-                    backgroundMusic.pause(); 
-                    musicToggleButton.innerHTML = pauseIcon; 
-                } else { 
-                    backgroundMusic.play().catch(e => console.error("Audio play failed:", e)); 
-                    musicToggleButton.innerHTML = playIcon; 
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play().catch(e => console.error("Audio play failed:", e));
+                } else {
+                    backgroundMusic.pause();
                 }
-                isMusicPlaying = !isMusicPlaying;
+                updateMusicButtonIcon();
             }
 
             function copyToClipboard(text, button) {
@@ -293,8 +368,25 @@
                 setTimeout(() => {
                     coverPage.style.display = 'none';
                     mainContent.classList.remove('hidden');
-                    toggleMusic();
+                    musicToggleButton.classList.remove('hidden'); // Show music toggle button
+                    backToCoverBtn.classList.remove('hidden'); // Show back to cover button
+                    
+                    // Directly play music and update icon after delay
+                    backgroundMusic.play().then(() => {
+                        updateMusicButtonIcon();
+                    }).catch(e => console.error("Audio play failed:", e));
                 }, 1000);
+            });
+            
+            // New event listener for the "Back to Cover" button
+            backToCoverBtn.addEventListener('click', () => {
+                mainContent.classList.add('hidden');
+                coverPage.style.display = 'flex';
+                coverPage.style.opacity = '1';
+                backgroundMusic.pause();
+                updateMusicButtonIcon();
+                musicToggleButton.classList.add('hidden');
+                backToCoverBtn.classList.add('hidden');
             });
 
             musicToggleButton.addEventListener('click', toggleMusic);
@@ -385,6 +477,9 @@
                 previewAudio.src = musicSelect.value;
                 previewAudio.play();
             });
+            
+            // Initial button icon setup
+            updateMusicButtonIcon();
         });
     </script>
 </body>
