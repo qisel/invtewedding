@@ -76,24 +76,24 @@
     </div>
 
     <!-- Admin Panel -->
-    <div id="admin-panel" class="hidden fixed bottom-4 right-4 bg-white/70 backdrop-blur-md p-4 rounded-3xl shadow-2xl w-80 z-50 transform transition-transform duration-300 ease-in-out">
-        <div class="flex justify-between items-center mb-2">
+    <div id="admin-panel" class="hidden fixed bottom-4 right-4 bg-white/70 backdrop-blur-md p-2 rounded-3xl shadow-2xl w-56 z-50 transform transition-transform duration-300 ease-in-out">
+        <div class="flex justify-between items-center mb-1">
             <h3 class="font-bold text-sm text-gray-800">Panel Admin</h3>
-            <button id="close-admin-panel" class="text-gray-500 hover:bg-gray-200/50 p-1 rounded-full focus:outline-none transition duration-150">
+            <button id="close-admin-panel" class="text-gray-500 hover:bg-gray-200/50 p-0.5 rounded-full focus:outline-none transition duration-150">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
-        <div class="space-y-2 text-xs">
+        <div class="space-y-1 text-xs">
             <!-- Guest Name Input -->
-            <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center justify-between gap-1">
                 <label class="font-medium text-gray-700">Nama Tamu</label>
                 <input type="text" id="guest-name-input" class="flex-grow p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70" placeholder="Contoh: John Doe">
             </div>
             <!-- Font Select -->
-            <div class="flex items-center justify-between gap-2">
-                <label class="font-medium text-gray-700">Jenis Huruf Judul</label>
+            <div class="flex items-center justify-between gap-1">
+                <label class="font-medium text-gray-700">Jenis Huruf</label>
                 <select id="font-select" class="flex-grow p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70 text-xs">
                     <option value="'Great Vibes', cursive" style="font-family: 'Great Vibes', cursive;">Great Vibes</option>
                     <option value="'Dancing Script', cursive" style="font-family: 'Dancing Script', cursive;">Dancing Script</option>
@@ -108,12 +108,12 @@
                 </select>
             </div>
             <!-- Font Color Input -->
-            <div class="flex items-center justify-between gap-2">
-                <label class="font-medium text-gray-700">Warna Teks Sampul</label>
+            <div class="flex items-center justify-between gap-1">
+                <label class="font-medium text-gray-700">Warna Teks</label>
                 <input type="color" id="font-color" value="#FFFFFF" class="flex-grow h-6 border border-gray-300 rounded-md bg-white/70">
             </div>
             <!-- Music Select -->
-            <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center justify-between gap-1">
                 <label class="font-medium text-gray-700">Musik Latar</label>
                 <div class="flex-grow flex items-center gap-1">
                     <select id="music-select" class="w-full p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70 text-xs">
@@ -127,7 +127,7 @@
                 </div>
             </div>
             <!-- Effect Select -->
-            <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center justify-between gap-1">
                 <label class="font-medium text-gray-700">Efek Latar</label>
                 <select id="effect-select" class="flex-grow p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70 text-xs">
                     <option value="none">Tidak Ada</option>
