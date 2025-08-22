@@ -121,11 +121,15 @@
                 <label class="font-medium text-gray-700">Latar Sampul</label>
                 <input type="url" id="bg-url-input" class="flex-grow p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70 text-xs" placeholder="Link Foto">
             </div>
-            <!-- Text Position Slider -->
+            <!-- NEW: Horizontal Text Position Slider -->
             <div class="flex items-center justify-between gap-1">
-                <label class="font-medium text-gray-700">Posisi Teks</label>
-                <!-- Renamed slider to be more accurate -->
-                <input type="range" id="text-position-slider" class="flex-grow" min="0" max="100" value="50" step="1">
+                <label class="font-medium text-gray-700">Posisi Horizontal</label>
+                <input type="range" id="text-position-x-slider" class="flex-grow" min="0" max="100" value="50" step="1">
+            </div>
+            <!-- NEW: Vertical Text Position Slider -->
+            <div class="flex items-center justify-between gap-1">
+                <label class="font-medium text-gray-700">Posisi Vertikal</label>
+                <input type="range" id="text-position-y-slider" class="flex-grow" min="0" max="100" value="50" step="1">
             </div>
             <!-- Music Select -->
             <div class="flex items-center justify-between gap-1">
@@ -242,7 +246,8 @@
             
             // Background and Text Position Controls
             const bgUrlInput = document.getElementById('bg-url-input');
-            const textPositionSlider = document.getElementById('text-position-slider');
+            const textPositionXSlider = document.getElementById('text-position-x-slider');
+            const textPositionYSlider = document.getElementById('text-position-y-slider');
             const defaultCoverImage = 'https://images.pexels.com/photos/6146276/pexels-photo-6146276.jpeg';
 
             // Modal elements
@@ -307,13 +312,15 @@
                 coverPage.style.backgroundImage = `url('${bgUrl}')`;
                 
                 // NEW: Apply text position from settings
-                if (settings.textPosition) {
-                    coverTextContainer.style.top = `${settings.textPosition}%`;
-                    coverTextContainer.style.transform = `translateY(-${settings.textPosition}%)`;
+                if (settings.textPositionX && settings.textPositionY) {
+                    coverTextContainer.style.top = `${settings.textPositionY}%`;
+                    coverTextContainer.style.left = `${settings.textPositionX}%`;
+                    coverTextContainer.style.transform = `translate(-${settings.textPositionX}%, -${settings.textPositionY}%)`;
                 } else {
                     // Default to 50% for centering
                     coverTextContainer.style.top = '50%';
-                    coverTextContainer.style.transform = 'translateY(-50%)';
+                    coverTextContainer.style.left = '50%';
+                    coverTextContainer.style.transform = 'translate(-50%, -50%)';
                 }
 
                 if (backgroundMusic.src !== settings.music) {
@@ -465,11 +472,18 @@
                 }
             });
 
-            // NEW: Live preview for text position
-            textPositionSlider.addEventListener('input', () => {
-                const value = textPositionSlider.value;
-                coverTextContainer.style.top = `${value}%`;
-                coverTextContainer.style.transform = `translateY(-${value}%)`;
+            // NEW: Live preview for both horizontal and vertical text position
+            textPositionXSlider.addEventListener('input', () => {
+                const xValue = textPositionXSlider.value;
+                const yValue = textPositionYSlider.value; // Get current Y value
+                coverTextContainer.style.left = `${xValue}%`;
+                coverTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
+            });
+            textPositionYSlider.addEventListener('input', () => {
+                const xValue = textPositionXSlider.value; // Get current X value
+                const yValue = textPositionYSlider.value;
+                coverTextContainer.style.top = `${yValue}%`;
+                coverTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
             });
 
             // Generate Link Button functionality
@@ -488,8 +502,9 @@
                     music: musicSelect.value,
                     effect: effectSelect.value,
                     bgUrl: bgUrlInput.value.trim(),
-                    // NEW: Save text position
-                    textPosition: textPositionSlider.value
+                    // NEW: Save both horizontal and vertical text position
+                    textPositionX: textPositionXSlider.value,
+                    textPositionY: textPositionYSlider.value
                 };
 
                 // Save data to Firestore
