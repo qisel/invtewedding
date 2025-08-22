@@ -46,11 +46,10 @@
 
     <div id="effect-container" class="effect-container hidden"></div>
 
-    <!-- Cover Page -->
-    <!-- Changed flexbox alignment to allow text position control -->
-    <div id="cover-page" class="relative h-screen w-screen bg-cover bg-center flex flex-col justify-start items-center text-white p-4" style="background-image: url('https://images.pexels.com/photos/6146276/pexels-photo-6146276.jpeg');">
-        <!-- Added a new ID for the text container to control its position -->
-        <div id="cover-text-container" class="absolute w-full flex justify-center items-center h-full">
+    <!-- Cover Page - REMOVED justify-start items-center to allow absolute positioning of child -->
+    <div id="cover-page" class="relative h-screen w-screen bg-cover bg-center flex flex-col p-4" style="background-image: url('https://images.pexels.com/photos/6146276/pexels-photo-6146276.jpeg');">
+        <!-- Text container is now absolutely positioned for smooth movement -->
+        <div id="cover-text-container" class="absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
             <div class="bg-black bg-opacity-50 p-6 rounded-lg text-center shadow-2xl">
                 <p class="text-base md:text-lg mb-1">The Wedding Of</p>
                 <h1 class="font-heading text-5xl md:text-7xl mb-2">Rizky & Anisa</h1>
@@ -472,15 +471,15 @@
                 }
             });
 
-            // NEW: Live preview for both horizontal and vertical text position
+            // Live preview for both horizontal and vertical text position
             textPositionXSlider.addEventListener('input', () => {
                 const xValue = textPositionXSlider.value;
-                const yValue = textPositionYSlider.value; // Get current Y value
+                const yValue = textPositionYSlider.value;
                 coverTextContainer.style.left = `${xValue}%`;
                 coverTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
             });
             textPositionYSlider.addEventListener('input', () => {
-                const xValue = textPositionXSlider.value; // Get current X value
+                const xValue = textPositionXSlider.value;
                 const yValue = textPositionYSlider.value;
                 coverTextContainer.style.top = `${yValue}%`;
                 coverTextContainer.style.transform = `translate(-${xValue}%, -${yValue}%)`;
@@ -502,7 +501,7 @@
                     music: musicSelect.value,
                     effect: effectSelect.value,
                     bgUrl: bgUrlInput.value.trim(),
-                    // NEW: Save both horizontal and vertical text position
+                    // Save both horizontal and vertical text position
                     textPositionX: textPositionXSlider.value,
                     textPositionY: textPositionYSlider.value
                 };
