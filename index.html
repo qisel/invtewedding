@@ -27,7 +27,7 @@
         .snow { position: absolute; top: -10px; width: 10px; height: 10px; background: white; border-radius: 50%; animation: fall 15s linear infinite; }
         .confetti { position: absolute; top: -15px; width: 10px; height: 15px; opacity: 0.8; animation: fall 8s linear infinite; }
         .heart { position: absolute; top: -20px; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FF4B4B"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'); background-size: contain; width: 20px; height: 20px; animation: fall 10s linear infinite; }
-        .bubble { position: absolute; bottom: -20px; width: 20px; height: 20px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; animation: rise 10s linear infinite; }
+        .bubble { position: absolute; bottom: -20px; width: 10px; height: 10px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; animation: rise 10s linear infinite; }
         @keyframes rise { to { transform: translateY(-105vh); opacity: 0; } }
         .star { position: absolute; width: 3px; height: 3px; background: white; border-radius: 50%; animation: twinkle 5s linear infinite; }
         @keyframes twinkle { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
@@ -51,13 +51,16 @@
         
         <!-- TOP TEXT CONTAINER -->
         <div id="top-text-container" class="absolute text-white text-center" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <div class="bg-black bg-opacity-50 p-6 rounded-lg shadow-2xl">
+            <!-- No background here -->
+            <div>
                 <p class="text-base md:text-lg mb-1">The Wedding Of</p>
-                <h1 class="font-heading text-5xl md:text-7xl">Rizky & Anisa</h1>
+                <!-- NEW: Added unique ID to h1 for individual scaling -->
+                <h1 id="couple-name-h1" class="font-heading text-5xl md:text-7xl">Rizky & Anisa</h1>
             </div>
         </div>
 
         <!-- BOTTOM TEXT CONTAINER -->
+        <!-- Added bg-black bg-opacity-50 back to this container only -->
         <div id="bottom-text-container" class="absolute text-white text-center" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
             <div class="bg-black bg-opacity-50 p-6 rounded-lg shadow-2xl">
                 <p class="text-base md:text-lg mb-2">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
@@ -127,6 +130,10 @@
             <div class="flex items-center justify-between gap-1">
                 <label class="font-medium text-gray-700">Latar Sampul</label>
                 <input type="url" id="bg-url-input" class="flex-grow p-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 bg-white/70 text-xs" placeholder="Link Foto">
+            </div>
+            <div class="flex items-center justify-between gap-1">
+                <label class="font-medium text-gray-700">Perbesar Nama</label>
+                <input type="range" id="zoom-slider" class="flex-grow" min="0.5" max="2" value="1" step="0.1">
             </div>
             <hr class="my-1 border-gray-300">
             <!-- Posisi Teks Atas -->
@@ -240,6 +247,7 @@
             const coverPage = document.getElementById('cover-page');
             const topTextContainer = document.getElementById('top-text-container');
             const bottomTextContainer = document.getElementById('bottom-text-container');
+            const coupleNameH1 = document.getElementById('couple-name-h1');
             const mainContent = document.getElementById('main-content');
             const openInvitationBtn = document.getElementById('open-invitation-btn');
             const backgroundMusic = document.getElementById('background-music');
@@ -267,6 +275,7 @@
             
             // Background and Text Position Controls
             const bgUrlInput = document.getElementById('bg-url-input');
+            const zoomSlider = document.getElementById('zoom-slider');
             const textPositionXTopSlider = document.getElementById('text-position-x-top-slider');
             const textPositionYTopSlider = document.getElementById('text-position-y-top-slider');
             const textPositionXBottomSlider = document.getElementById('text-position-x-bottom-slider');
@@ -334,7 +343,7 @@
                 const bgUrl = settings.bgUrl || defaultCoverImage;
                 coverPage.style.backgroundImage = `url('${bgUrl}')`;
                 
-                // NEW: Apply positions for both text containers
+                // NEW: Apply text position from settings
                 if (settings.textPositionXTop && settings.textPositionYTop) {
                     topTextContainer.style.top = `${settings.textPositionYTop}%`;
                     topTextContainer.style.left = `${settings.textPositionXTop}%`;
@@ -353,6 +362,13 @@
                     bottomTextContainer.style.top = '65%';
                     bottomTextContainer.style.left = '50%';
                     bottomTextContainer.style.transform = 'translate(-50%, -65%)';
+                }
+
+                // NEW: Apply zoom only to the couple's name
+                if (settings.zoom) {
+                    coupleNameH1.style.transform = `scale(${settings.zoom})`;
+                } else {
+                    coupleNameH1.style.transform = `scale(1)`;
                 }
 
                 if (backgroundMusic.src !== settings.music) {
@@ -504,6 +520,12 @@
                 }
             });
 
+            // Live preview for zoom
+            zoomSlider.addEventListener('input', () => {
+                const zoomValue = zoomSlider.value;
+                coupleNameH1.style.transform = `scale(${zoomValue})`;
+            });
+
             // Live preview for top text position
             textPositionXTopSlider.addEventListener('input', () => {
                 const xValue = textPositionXTopSlider.value;
@@ -548,6 +570,7 @@
                     music: musicSelect.value,
                     effect: effectSelect.value,
                     bgUrl: bgUrlInput.value.trim(),
+                    zoom: zoomSlider.value,
                     // Save all four slider values
                     textPositionXTop: textPositionXTopSlider.value,
                     textPositionYTop: textPositionYTopSlider.value,
